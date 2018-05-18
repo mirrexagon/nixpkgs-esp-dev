@@ -2,7 +2,6 @@ self: super:
 
 let
   callPackage = super.callPackage;
-  callPackage_self = super.lib.callPackageWith (self // self.xorg);
 in {
   esptool = callPackage ./pkgs/esptool {};
 
