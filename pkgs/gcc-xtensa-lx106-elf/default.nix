@@ -42,6 +42,10 @@ stdenv.mkDerivation rec {
     # Put toolchain in $out.
     sed -r -i.org "s%CT_PREFIX_DIR=.*%CT_PREFIX_DIR=\"$out\"%" .config
 
+    # Don't make toolchain read-only, so we can install libhal. Nix will take 
+    # care of making it read-only anyway.
+    sed -r -i "s%CT_INSTALL_DIR_RO=y%CT_INSTALL_DIR_RO=n%" .config
+
     # Increase the verbosity of crosstool-NG.
     sed -r -i.org "s%CT_LOG_LEVEL_MAX=.*%CT_LOG_LEVEL_MAX=ALL%" .config
     sed -r -i.org "s%CT_LOG_PROGRESS_BAR=.*%CT_LOG_PROGRESS_BAR=n%" .config
@@ -52,7 +56,7 @@ stdenv.mkDerivation rec {
   buildPhase = ''
     ${crosstool-ng-xtensa}/bin/ct-ng build
 
-    # libhal
+    # Build and install libhal.
     cp -r ${libhal} libhal
     chmod -R +w libhal
 
@@ -66,7 +70,6 @@ stdenv.mkDerivation rec {
     ./configure --host=${targetTriple} --prefix=$out/${targetTriple}/sysroot/usr
     make
 
-    chmod -R +w $out
     make install
   '';
 }
