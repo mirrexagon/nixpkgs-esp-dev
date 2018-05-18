@@ -8,6 +8,8 @@ This overlay contains derivations for:
  
 There is also a derivation (`shell-esp32.nix`) for use with `nix-shell`, for ESP32 development with [esp-idf](https://github.com/espressif/esp-idf).
 
+---
+
 Partly adapted from [esp-open-sdk](https://github.com/pfalcon/esp-open-sdk).
 
 Released into the public domain via CC0 (see `COPYING`).
