@@ -7,15 +7,15 @@ stdenv.mkDerivation rec {
   name = "crosstool-ng-xtensa";
 
   src = fetchFromGitHub {
-    owner = "espressif";
+    owner = "jcmvbkbc";
     repo = "crosstool-NG";
-    rev = "6c4433a51e4f2f2f9d9d4a13e75cd951acdfa80c";
-    sha256 = "03qg9vb0mf10nfslggmb7lc426l0gxqhfyvbadh86x41n2j6ddg6";
+    rev = "37b07f6fbea2e5d23434f7e91614528f839db056";
+    sha256 = "1rnxdnn7754s65538hmf5kh7h8j56m6ncppahfpwj327sjg8jpkb";
   };
 
   mforce-l32_patch = fetchurl {
     url = "https://github.com/jcmvbkbc/gcc-xtensa/commit/6b0c9f92fb8e11c6be098febb4f502f6af37cd35.patch";
-    sha256 = "0nx1vahlq71vr08c8g1s3w5kka19wss0l3i38ma4kxa2sc0jk856";
+    sha256 = "1cfdh7jvgg66x4xfbr1zsx7bgrcmj7y81l2wknfc7shdf69ybfax";
   };
 
   nativeBuildInputs = [
