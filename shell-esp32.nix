@@ -1,9 +1,9 @@
-with import <nixpkgs> {};
+{ pkgs ? import ./default.nix {} }:
 
-stdenv.mkDerivation {
+pkgs.stdenv.mkDerivation {
   name = "esp-idf-env";
 
-  buildInputs = [
+  buildInputs = with pkgs; [
     gcc-xtensa-esp32-elf
 
     git
