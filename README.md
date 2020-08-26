@@ -14,7 +14,7 @@ To add this as a nixpkgs overlay, clone this repo somewhere on your machine and 
 
 ---
 
-Note: This currently is impure and requires sandboxing to be turned off in Nix. On NixOS, set `nix.useSandbox = false;` in your NixOS configuration.
+Note: This currently is impure and requires sandboxing to be turned off. Run commands that build things from this repo with `--option sandbox false`.
 
 ---
 
