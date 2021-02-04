@@ -1,4 +1,4 @@
-{ pkgs ? import ./default.nix {} }:
+{ pkgs ? import ./default.nix }:
 
 pkgs.stdenv.mkDerivation {
   name = "esp-open-rtos-env";
