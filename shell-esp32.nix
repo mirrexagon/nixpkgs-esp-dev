@@ -5,6 +5,7 @@ pkgs.stdenv.mkDerivation {
 
   buildInputs = with pkgs; [
     gcc-xtensa-esp32-elf
+    esptool
 
     git
     wget
