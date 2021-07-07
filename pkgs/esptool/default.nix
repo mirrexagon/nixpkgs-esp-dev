@@ -1,4 +1,4 @@
-{ stdenv, fetchurl, fetchFromGitHub, makeWrapper, zip, python3Packages }:
+{ lib, stdenv, fetchurl, fetchFromGitHub, makeWrapper, zip, python3Packages }:
 
 with python3Packages;
 buildPythonApplication rec {
@@ -17,7 +17,7 @@ buildPythonApplication rec {
 
   doCheck = false;
 
-  meta = with stdenv.lib; {
+  meta = with lib; {
     homepage = https://github.com/espressif/esptool;
     description = "ESP8266 and ESP32 serial bootloader utility";
     license = licenses.gpl2;
