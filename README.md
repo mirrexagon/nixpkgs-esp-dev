@@ -1,6 +1,8 @@
 # nixpkgs-esp-dev
 Derivations for developing for ESP8266 and ESP32 on NixOS.
 
+**NOTE:** This repo builds the toolchains from source, which takes a while. If you are doing ESP32 development, I recommend adapting https://nixos.wiki/wiki/ESP-IDF instead of using this.
+
 This repo contains derivations for:
 - Toolchains (compiler, linker, etc.) for `xtensa-lx106-elf` and `xtensa-esp32-elf` built with the xtensa fork of [crosstool-NG](https://github.com/jcmvbkbc/crosstool-NG)
 - The xtensa crosstool-NG fork itself.
