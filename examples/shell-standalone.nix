@@ -19,6 +19,11 @@ pkgs.mkShell
     esp-idf
     esptool
 
+    # Tools required to use ESP-IDF.
+    git
+    wget
+    gnumake
+
     flex
     bison
     gperf

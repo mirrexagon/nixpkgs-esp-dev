@@ -14,12 +14,27 @@ pkgs.mkShell
   buildInputs = with pkgs; [
     (gcc-xtensa-esp32-elf-bin.override {
       version = "2021r2";
-      hash = pkgs.lib.fakeHash;
+      hash = "sha256-PrPWiyf6a6Wvb4jaIcuPrOm+AJTaqolgeTz+Vwq3hf8=";
     })
 
     (esp-idf.override {
       rev = "f5a2fc578d586b28f5f270787524132e99d94741";
-      sha256 = pkgs.lib.fakeSha256;
+      sha256 = "sha256-ldbHXWPWkYQCWJiY0v8phgtFQnBu7eSObp3j5+nV8L4=";
     })
+
+    # Tools required to use ESP-IDF.
+    git
+    wget
+    gnumake
+
+    flex
+    bison
+    gperf
+    pkgconfig
+
+    cmake
+    ninja
+
+    ncurses5
   ];
 }

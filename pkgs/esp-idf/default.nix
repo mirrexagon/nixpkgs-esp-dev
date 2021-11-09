@@ -18,11 +18,13 @@ let
 
   pythonEnv =
     let
-      # Comment out Windows-specific line from requirements.txt that mach-nix can't parse.
+      # Remove things from requirements.txt that aren't necessary and mach-nix can't parse:
+      # - Comment out Windows-specific "file://" line.
+      # - Comment out ARMv7-specific "--only-binary" line.
       requirementsOriginalText = builtins.readFile "${src}/requirements.txt";
       requirementsText = builtins.replaceStrings
-        [ "file://" ]
-        [ "#file://" ]
+        [ "file://" "--only-binary" ]
+        [ "#file://" "#--only-binary" ]
         requirementsOriginalText;
     in
     # https://github.com/DavHau/mach-nix/issues/153#issuecomment-775102329
