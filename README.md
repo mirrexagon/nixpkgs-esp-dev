@@ -36,7 +36,7 @@ See `examples/shell-standalone.nix` for an example.
 
 
 ## Overriding ESP-IDF and ESP32 toolchain versions
-There are default versions of ESP-IDF and the ESP32 toolchain versions specified in `pkgs/esp32-toolchain-bin.nix` and `pkgs/esp-idf/default.nix`. To use a different version of ESP-IDF, override the derivations with the desired versions and the hashes for them. Note that specific versions of ESP-IDF require specific versions of the toolchain, which is why the versions of both are customizable.
+There are default versions of ESP-IDF and the ESP32 toolchain versions specified in `pkgs/esp32-toolchain-bin.nix` and `pkgs/esp-idf/default.nix`. To use a different version of ESP-IDF or to pin the versions, override the derivations with the desired versions and the hashes for them. Note that given versions of ESP-IDF require specific versions of the toolchain, which is why the versions of both are customizable.
 
 See `examples/shell-override-versions.nix` for an example.
 
