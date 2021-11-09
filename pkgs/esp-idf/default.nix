@@ -26,7 +26,7 @@ let
         requirementsOriginalText;
     in
     # https://github.com/DavHau/mach-nix/issues/153#issuecomment-775102329
-    mach-nix.lib."${stdenv.system}".mkPython
+    mach-nix.mkPython
       {
         requirements = requirementsText;
       };
