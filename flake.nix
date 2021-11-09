@@ -25,8 +25,8 @@
       };
 
       devShells = {
-        esp32-idf = pkgs.callPackage ./shells/esp32-idf.nix { };
-        esp8266 = pkgs.callPackage ./shells/esp8266.nix { };
+        esp32-idf = import ./shells/esp32-idf.nix { inherit pkgs; };
+        esp8266 = import ./shells/esp8266.nix { inherit pkgs; };
       };
     });
 }

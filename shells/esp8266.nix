@@ -1,9 +1,9 @@
-{ mkShell, gcc-xtensa-lx106-elf-bin, esptool }:
+{ pkgs ? import ../default.nix }:
 
-mkShell {
+pkgs.mkShell {
   name = "esp8266";
 
-  buildInputs = [
+  buildInputs = with pkgs; [
     gcc-xtensa-lx106-elf-bin
     esptool
   ];

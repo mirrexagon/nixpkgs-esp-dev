@@ -1,27 +1,9 @@
-{ mkShell
-, stdenv
-, lib
-, fetchFromGitHub
-, gcc-xtensa-esp32-elf-bin
-, openocd-esp32-bin
-, esptool
-, esp-idf
-, git
-, wget
-, gnumake
-, flex
-, bison
-, gperf
-, pkgconfig
-, cmake
-, ninja
-, ncurses5
-}:
+{ pkgs ? import ../default.nix }:
 
-mkShell {
+pkgs.mkShell {
   name = "esp-idf";
 
-  buildInputs = [
+  buildInputs = with pkgs; [
     gcc-xtensa-esp32-elf-bin
     openocd-esp32-bin
     esp-idf
