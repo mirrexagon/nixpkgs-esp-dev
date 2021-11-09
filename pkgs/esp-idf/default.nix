@@ -4,7 +4,6 @@
 , lib
 , fetchFromGitHub
 , mach-nix
-, python3
 }:
 
 let
@@ -42,8 +41,7 @@ stdenv.mkDerivation rec {
 
   propagatedBuildInputs = [
     # This is so that downstream derivations will run the Python setup hook and get PYTHONPATH set up correctly.
-    # TODO: Ensures this uses the same python derivation as mach-nix, or have it use this one.
-    python3
+    pythonEnv.python
   ];
 
   installPhase = ''
