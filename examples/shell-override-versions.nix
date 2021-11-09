@@ -7,8 +7,7 @@ let
 
   pkgs = import <nixpkgs> { overlays = [ (import "${nixpkgs-esp-dev}/overlay.nix") ]; };
 in
-pkgs.mkShell
-{
+pkgs.mkShell {
   name = "esp-project";
 
   buildInputs = with pkgs; [
