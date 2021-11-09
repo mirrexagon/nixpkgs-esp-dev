@@ -27,7 +27,6 @@ let
         [ "#file://" "#--only-binary" ]
         requirementsOriginalText;
     in
-    # https://github.com/DavHau/mach-nix/issues/153#issuecomment-775102329
     mach-nix.mkPython
       {
         requirements = requirementsText;
