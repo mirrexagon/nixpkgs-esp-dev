@@ -24,7 +24,8 @@ in
   # ESP8266
   gcc-xtensa-lx106-elf-bin = prev.callPackage ./pkgs/esp8266-toolchain-bin.nix { };
 
-  # Note: These are currently broken because they fetch files during the build, making them impure which flakes don't allow.
+  # Note: These are currently broken in flake mode because they fetch files
+  # during the build, making them impure.
   crosstool-ng-xtensa = prev.callPackage ./pkgs/crosstool-ng-xtensa.nix { };
   gcc-xtensa-lx106-elf = prev.callPackage ./pkgs/gcc-xtensa-lx106-elf { };
 }
