@@ -1,4 +1,11 @@
-{ stdenv, lib, fetchurl, makeWrapper, buildFHSUserEnv }:
+{ version ? "2021r1"
+, hash ? "sha256-RKC0Z7nSt1mrSLLyeu1oRYHzPJbihCmSeBxOBFmSxbA="
+, stdenv
+, lib
+, fetchurl
+, makeWrapper
+, buildFHSUserEnv
+}:
 
 let
   fhsEnv = buildFHSUserEnv {
@@ -12,11 +19,11 @@ assert stdenv.system == "x86_64-linux";
 
 stdenv.mkDerivation rec {
   pname = "esp32-toolchain";
-  version = "2021r1";
+  inherit version;
 
   src = fetchurl {
     url = "https://github.com/espressif/crosstool-NG/releases/download/esp-${version}/xtensa-esp32-elf-gcc8_4_0-esp-${version}-linux-amd64.tar.gz";
-    hash = "sha256-RKC0Z7nSt1mrSLLyeu1oRYHzPJbihCmSeBxOBFmSxbA=";
+    inherit hash;
   };
 
   buildInputs = [ makeWrapper ];

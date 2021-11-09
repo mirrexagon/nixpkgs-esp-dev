@@ -1,4 +1,6 @@
-{ stdenv
+{ rev ? "v4.3.1"
+, sha256 ? "sha256-+SMdnIBSCdHy+MDbInl/aXJuXOf9seJbQ3u4mN+qFP4="
+, stdenv
 , lib
 , fetchFromGitHub
 , mach-nix
@@ -6,13 +8,11 @@
 }:
 
 let
-  version = "4.3.1";
-
   src = fetchFromGitHub {
     owner = "espressif";
     repo = "esp-idf";
-    rev = "v${version}";
-    sha256 = "sha256-+SMdnIBSCdHy+MDbInl/aXJuXOf9seJbQ3u4mN+qFP4=";
+    rev = rev;
+    sha256 = sha256;
     fetchSubmodules = true;
   };
 
@@ -33,8 +33,9 @@ let
 in
 stdenv.mkDerivation rec {
   pname = "esp-idf";
+  version = rev;
 
-  inherit version src;
+  inherit src;
 
   # This is so that downstream derivations will have IDF_PATH set.
   setupHook = ./setup-hook.sh;

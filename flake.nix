@@ -5,6 +5,7 @@
     nixpkgs.url = "nixpkgs/nixos-unstable";
     flake-utils.url = "github:numtide/flake-utils";
 
+    # Used to set up the ESP-IDF Python environment.
     mach-nix = {
       url = "github:DavHau/mach-nix";
       inputs.nixpkgs.follows = "nixpkgs";
