@@ -15,6 +15,8 @@ let
   };
 in
 {
+  # ESP32C3
+  gcc-riscv32-esp32c3-elf-bin = prev.callPackage ./pkgs/esp32c3-toolchain-bin.nix { };
   # ESP32
   gcc-xtensa-esp32-elf-bin = prev.callPackage ./pkgs/esp32-toolchain-bin.nix { };
   openocd-esp32-bin = prev.callPackage ./pkgs/openocd-esp32-bin.nix { };
