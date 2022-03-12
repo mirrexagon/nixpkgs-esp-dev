@@ -1,5 +1,5 @@
 # nixpkgs-esp-dev
-ESP8266 and ESP32 packages and development environments for Nix.
+ESP8266 and ESP32(-C3) packages and development environments for Nix.
 
 This repo contains derivations for:
 - Toolchains (compiler, linker, GDB, etc.) for `xtensa-lx106-elf` (ESP8266) and `xtensa-esp32-elf` (ESP32) using the official binaries from Espressif.
@@ -21,6 +21,7 @@ The easiest way to get started is to run one of these commands to get a developm
 ### `nix-shell`
 If you're not using Nix 2.4+ or prefer not to need to enable flakes, you can clone the repo and use one of:
 
+- `nix-shell shells/esp32c3-idf.nix`
 - `nix-shell shells/esp32-idf.nix`
 - `nix-shell shells/esp8266.nix`
 
