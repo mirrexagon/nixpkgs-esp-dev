@@ -15,7 +15,7 @@
     {
       packages = {
         inherit (pkgs)
-          gccriscv32-esp32c3-elf-bin
+          gcc-riscv32-esp32c3-elf-bin
           gcc-xtensa-esp32-elf-bin
           openocd-esp32-bin
           esp-idf
