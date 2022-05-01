@@ -4,13 +4,13 @@ let
   mach-nix-src = prev.fetchFromGitHub {
     owner = "DavHau";
     repo = "mach-nix";
-    rev = "98d001727542bb6142d0ab554fc30bd591b07c73";
-    hash = "sha256-SXrwF/KPz8McBN8kN+HTfGphE1hiRSr1mtXSVjPJr8o=";
+    rev = "refs/tags/3.4.0";
+    hash = "sha256-CJDg/RpZdUVyI3QIAXUqIoYDl7VkxFtNE4JWih0ucKc=";
   };
 
   mach-nix = import mach-nix-src {
-    pypiDataRev = "2385b06414a8406732bb8c0de86b20d17ca8c19d";
-    pypiDataSha256 = "sha256:1hixh41l3f232mgwmzsljdbyvyc0sdhvl8ph5s3f8cqbw2m4yny1";
+    pypiDataRev = "f1b18354f73e8805de32e635be0fe86c9fb8eb84";
+    pypiDataSha256 = "sha256:0vmia5hlv31v99krdkp83kyg1aa76jh8896wa3cafh9q0hsry40q";
     pkgs = final;
   };
 in
