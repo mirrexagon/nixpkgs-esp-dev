@@ -22,6 +22,7 @@ The easiest way to get started is to run one of these commands to get a developm
 If you're not using Nix 2.4+ or prefer not to need to enable flakes, you can clone the repo and use one of:
 
 - `nix-shell shells/esp32c3-idf.nix`
+- `nix-shell shells/esp32s2-idf.nix`
 - `nix-shell shells/esp32-idf.nix`
 - `nix-shell shells/esp8266.nix`
 

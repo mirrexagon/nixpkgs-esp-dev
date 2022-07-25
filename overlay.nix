@@ -9,14 +9,16 @@ let
   };
 
   mach-nix = import mach-nix-src {
-    pypiDataRev = "2385b06414a8406732bb8c0de86b20d17ca8c19d";
-    pypiDataSha256 = "sha256:1hixh41l3f232mgwmzsljdbyvyc0sdhvl8ph5s3f8cqbw2m4yny1";
+    pypiDataRev = "1d17587404960e2e9fd0fd7e514b0bbc52abcdfd";
+    pypiDataSha256 = "sha256:078i0af4s1la5cafq958wfk8as711qlf81ngrg0xq0wys7ainig1";
     pkgs = final;
   };
 in
 {
   # ESP32C3
   gcc-riscv32-esp32c3-elf-bin = prev.callPackage ./pkgs/esp32c3-toolchain-bin.nix { };
+  # ESP32S2
+  gcc-xtensa-esp32s2-elf-bin = prev.callPackage ./pkgs/esp32s2-toolchain-bin.nix { };
   # ESP32
   gcc-xtensa-esp32-elf-bin = prev.callPackage ./pkgs/esp32-toolchain-bin.nix { };
   openocd-esp32-bin = prev.callPackage ./pkgs/openocd-esp32-bin.nix { };
