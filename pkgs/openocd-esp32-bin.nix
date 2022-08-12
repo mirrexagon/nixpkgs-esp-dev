@@ -9,11 +9,11 @@ let
 in
 stdenv.mkDerivation rec {
   pname = "openocd";
-  version = "0.10.0-esp32-20210902";
+  version = "0.11.0-esp32-20220706";
 
   src = fetchurl {
-    url = "https://github.com/espressif/openocd-esp32/releases/download/v${version}/openocd-esp32-linux64-${version}.tar.gz";
-    hash = "sha256-vXNkuL9PoD7rusf4q6hjICnDSUbuZ9RRwCGCqui8OOA=";
+    url = "https://github.com/espressif/openocd-esp32/releases/download/v${version}/openocd-esp32-linux-amd64-${version}.tar.gz";
+    hash = "sha256-JvHxjdk+twoTIDhI0/scwuDeH9Z0nH3XcbLehwlzWu0=";
   };
 
   buildInputs = [ makeWrapper ];

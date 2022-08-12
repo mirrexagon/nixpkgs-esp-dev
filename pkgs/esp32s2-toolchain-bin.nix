@@ -1,6 +1,6 @@
 # This version needs to be compatible with the version of ESP-IDF specified in `esp-idf/default.nix`.
 { version ? "2021r2-patch3"
-, hash ? "sha256-F5y61Xl5CtNeD0FKGNkAF8DxWMOXAiQRqOmGfbIXTxU="
+, hash ? "sha256-oyRRqO3BEEuDzZlxF45hgm6VfX25rZ+BeYqJaf1alU4="
 , stdenv
 , lib
 , fetchurl
@@ -10,7 +10,7 @@
 
 let
   fhsEnv = buildFHSUserEnv {
-    name = "esp32c3-toolchain-env";
+    name = "esp32s2-toolchain-env";
     targetPkgs = pkgs: with pkgs; [ zlib ];
     runScript = "";
   };
@@ -19,11 +19,11 @@ in
 assert stdenv.system == "x86_64-linux";
 
 stdenv.mkDerivation rec {
-  pname = "esp32c3-toolchain";
+  pname = "esp32s2-toolchain";
   inherit version;
 
   src = fetchurl {
-    url = "https://github.com/espressif/crosstool-NG/releases/download/esp-${version}/riscv32-esp-elf-gcc8_4_0-esp-${version}-linux-amd64.tar.gz";
+    url = "https://github.com/espressif/crosstool-NG/releases/download/esp-${version}/xtensa-esp32s2-elf-gcc8_4_0-esp-${version}-linux-amd64.tar.gz";
     inherit hash;
   };
 
@@ -37,13 +37,13 @@ stdenv.mkDerivation rec {
       FILE_PATH="$out/bin/$FILE"
       if [[ -x $FILE_PATH ]]; then
         mv $FILE_PATH $FILE_PATH-unwrapped
-        makeWrapper ${fhsEnv}/bin/esp32c3-toolchain-env $FILE_PATH --add-flags "$FILE_PATH-unwrapped"
+        makeWrapper ${fhsEnv}/bin/esp32s2-toolchain-env $FILE_PATH --add-flags "$FILE_PATH-unwrapped"
       fi
     done
   '';
 
   meta = with lib; {
-    description = "ESP32-C3 compiler toolchain";
+    description = "ESP32-S2 compiler toolchain";
     homepage = "https://docs.espressif.com/projects/esp-idf/en/stable/get-started/linux-setup.html";
     license = licenses.gpl3;
   };
