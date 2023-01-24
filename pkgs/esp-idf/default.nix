@@ -1,6 +1,6 @@
-# When updating to a newer version, check if the version of `esp32*-toolchain-bin.nix` also needs to be updated.
-{ rev ? "v4.4.1"
-, sha256 ? "sha256-4dAGcJN5JVV9ywCOuhMbdTvlJSCrJdlMV6wW06xcrys="
+# When updating to a newer version, check if the version of `esp32-toolchain-bin.nix` also needs to be updated.
+{ rev ? "v5.0"
+, sha256 ? "sha256-k2zVKXZCxeTJjON7hm3zWGqZDaOTWS5Ot4+MVnW89Q4="
 , stdenv
 , lib
 , fetchFromGitHub
@@ -21,7 +21,7 @@ let
       # Remove things from requirements.txt that aren't necessary and mach-nix can't parse:
       # - Comment out Windows-specific "file://" line.
       # - Comment out ARMv7-specific "--only-binary" line.
-      requirementsOriginalText = builtins.readFile "${src}/requirements.txt";
+      requirementsOriginalText = builtins.readFile "${src}/tools/requirements/requirements.core.txt";
       requirementsText = builtins.replaceStrings
         [ "file://" "--only-binary" ]
         [ "#file://" "#--only-binary" ]
