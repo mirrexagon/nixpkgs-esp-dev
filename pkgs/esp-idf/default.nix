@@ -1,10 +1,11 @@
 # When updating to a newer version, check if the version of `esp32-toolchain-bin.nix` also needs to be updated.
-{ rev ? "v5.0"
-, sha256 ? "sha256-k2zVKXZCxeTJjON7hm3zWGqZDaOTWS5Ot4+MVnW89Q4="
+{ rev ? "v5.0.2"
+, sha256 ? "sha256-P0ltrdc048wUJyPELZzRyLAszc8XN8P6V6s0wyPalMA="
 , stdenv
 , lib
 , fetchFromGitHub
 , mach-nix
+, makeWrapper
 }:
 
 let
@@ -41,6 +42,8 @@ stdenv.mkDerivation rec {
   # This is so that downstream derivations will have IDF_PATH set.
   setupHook = ./setup-hook.sh;
 
+  nativeBuildInputs = [ makeWrapper ];
+
   propagatedBuildInputs = [
     # This is so that downstream derivations will run the Python setup hook and get PYTHONPATH set up correctly.
     pythonEnv.python
@@ -48,7 +51,9 @@ stdenv.mkDerivation rec {
 
   installPhase = ''
     mkdir -p $out
-    cp -r $src/* $out/
+    cp -rv . $out/
+
+    wrapProgram $out/tools/idf.py --set IDF_PYTHON_ENV_PATH ${pythonEnv} --set IDF_PYTHON_CHECK_CONSTRAINTS no
 
     # Link the Python environment in so that in shell derivations, the Python
     # setup hook will add the site-packages directory to PYTHONPATH.
