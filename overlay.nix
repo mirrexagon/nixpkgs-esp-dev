@@ -9,8 +9,8 @@ let
   };
 
   mach-nix = import mach-nix-src {
-    pypiDataRev = "1d17587404960e2e9fd0fd7e514b0bbc52abcdfd";
-    pypiDataSha256 = "sha256:078i0af4s1la5cafq958wfk8as711qlf81ngrg0xq0wys7ainig1";
+    pypiDataRev = "3ea10df4be564e619cb1c34922822c6e8ad74ea7";
+    pypiDataSha256 = "sha256:02w7qr70gxcq99abjk7ql49ffkvbmd3phwzv2pgiqvjkcgsnxdzj";
     pkgs = final;
   };
 in
