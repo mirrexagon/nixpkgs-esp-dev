@@ -15,14 +15,19 @@ let
   };
 in
 {
-  # ESP32C3
-  gcc-riscv32-esp32c3-elf-bin = prev.callPackage ./pkgs/esp32c3-toolchain-bin.nix { };
-  # ESP32S2
-  gcc-xtensa-esp32s2-elf-bin = prev.callPackage ./pkgs/esp32s2-toolchain-bin.nix { };
-  # ESP32S3
-  gcc-xtensa-esp32s3-elf-bin = prev.callPackage ./pkgs/esp32s3-toolchain-bin.nix { };
   # ESP32
   gcc-xtensa-esp32-elf-bin = prev.callPackage ./pkgs/esp32-toolchain-bin.nix { };
+  esp32ulp-elf-bin = prev.callPackage ./pkgs/esp32-ulp-toolchain-bin.nix { };
+
+  # ESP32-C3
+  gcc-riscv32-esp32c3-elf-bin = prev.callPackage ./pkgs/esp32c3-toolchain-bin.nix { };
+
+  # ESP32-S2
+  gcc-xtensa-esp32s2-elf-bin = prev.callPackage ./pkgs/esp32s2-toolchain-bin.nix { };
+
+  # ESP32-S3
+  gcc-xtensa-esp32s3-elf-bin = prev.callPackage ./pkgs/esp32s3-toolchain-bin.nix { };
+
   openocd-esp32-bin = prev.callPackage ./pkgs/openocd-esp32-bin.nix { };
 
   esp-idf = prev.callPackage ./pkgs/esp-idf { inherit mach-nix; };

@@ -5,6 +5,7 @@ pkgs.mkShell {
 
   buildInputs = with pkgs; [
     gcc-xtensa-esp32-elf-bin
+    esp32ulp-elf-bin
     openocd-esp32-bin
     esp-idf
 
