@@ -15,7 +15,7 @@ let
   };
 in
 stdenv.mkDerivation rec {
-  pname = "ulp-toolchain";
+  pname = "esp32-ulp-toolchain";
   inherit version;
 
   src = fetchurl {

@@ -9,13 +9,13 @@
 
 let
   fhsEnv = buildFHSUserEnv {
-    name = "esp32-openocd-env";
+    name = "openocd-esp32-env";
     targetPkgs = pkgs: with pkgs; [ zlib libusb1 ];
     runScript = "";
   };
 in
 stdenv.mkDerivation rec {
-  pname = "openocd";
+  pname = "openocd-esp32";
   inherit version;
 
   src = fetchurl {
@@ -33,7 +33,7 @@ stdenv.mkDerivation rec {
       FILE_PATH="$out/bin/$FILE"
       if [[ -x $FILE_PATH ]]; then
         mv $FILE_PATH $FILE_PATH-unwrapped
-        makeWrapper ${fhsEnv}/bin/esp32-openocd-env $FILE_PATH --add-flags "$FILE_PATH-unwrapped"
+        makeWrapper ${fhsEnv}/bin/openocd-esp32-env $FILE_PATH --add-flags "$FILE_PATH-unwrapped"
       fi
     done
   '';
