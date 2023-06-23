@@ -1,4 +1,11 @@
-{ stdenv, lib, fetchurl, makeWrapper, buildFHSUserEnv }:
+{ version ? "0.11.0-esp32-20221026"
+, hash ? "sha256-zmPpsd+rYMxi2l3Cq8wiunA2xCr+dGcceH6wJnROfQs="
+, stdenv
+, lib
+, fetchurl
+, makeWrapper
+, buildFHSUserEnv
+}:
 
 let
   fhsEnv = buildFHSUserEnv {
@@ -9,11 +16,11 @@ let
 in
 stdenv.mkDerivation rec {
   pname = "openocd";
-  version = "0.11.0-esp32-20221026";
+  inherit version;
 
   src = fetchurl {
     url = "https://github.com/espressif/openocd-esp32/releases/download/v${version}/openocd-esp32-linux-amd64-${version}.tar.gz";
-    hash = "sha256-zmPpsd+rYMxi2l3Cq8wiunA2xCr+dGcceH6wJnROfQs=";
+    inherit hash;
   };
 
   buildInputs = [ makeWrapper ];

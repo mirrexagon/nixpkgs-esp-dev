@@ -1,4 +1,11 @@
-{ stdenv, lib, fetchurl, makeWrapper, buildFHSUserEnv }:
+{ version ? "2.35_20220830"
+, hash ? "sha256-sfeAHDoWFi5yOT67dywMv+TSLZB758LC2sFoc26Rlf0="
+, stdenv
+, lib
+, fetchurl
+, makeWrapper
+, buildFHSUserEnv
+}:
 
 let
   fhsEnv = buildFHSUserEnv {
@@ -9,11 +16,11 @@ let
 in
 stdenv.mkDerivation rec {
   pname = "ulp-toolchain";
-  version = "2.35_20220830";
+  inherit version;
 
   src = fetchurl {
     url = "https://github.com/espressif/binutils-gdb/releases/download/esp32ulp-elf-v${version}/esp32ulp-elf-${version}-linux-amd64.tar.gz";
-    hash = "sha256-sfeAHDoWFi5yOT67dywMv+TSLZB758LC2sFoc26Rlf0=";
+    inherit hash;
   };
 
   buildInputs = [ makeWrapper ];
