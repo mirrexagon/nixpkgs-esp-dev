@@ -53,10 +53,11 @@ stdenv.mkDerivation rec {
     mkdir -p $out
     cp -rv . $out/
 
-    wrapProgram $out/tools/idf.py --set IDF_PYTHON_ENV_PATH ${pythonEnv} --set IDF_PYTHON_CHECK_CONSTRAINTS no
-
-    # Link the Python environment in so that in shell derivations, the Python
-    # setup hook will add the site-packages directory to PYTHONPATH.
-    ln -s ${pythonEnv}/lib $out/
+    # Link the Python environment in so that:
+    # - The setup hook can set IDF_PYTHON_ENV_PATH to it.
+    # - In shell derivations, the Python setup hook will add the site-packages
+    #   directory to PYTHONPATH.
+    ln -s ${pythonEnv} $out/python-env
+    ln -s ${pythonEnv}/lib $out/lib
   '';
 }
