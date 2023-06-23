@@ -1,10 +1,11 @@
-# When updating to a newer version, check if the version of `esp32*-toolchain-bin.nix` also needs to be updated.
-{ rev ? "v4.4.1"
-, sha256 ? "sha256-4dAGcJN5JVV9ywCOuhMbdTvlJSCrJdlMV6wW06xcrys="
+# When updating to a newer version, check if the version of `esp32-toolchain-bin.nix` also needs to be updated.
+{ rev ? "v5.0.2"
+, sha256 ? "sha256-dlmtTjoz4qQdFG229v9bIHKpYBzjM44fv+XhdDBu2Os="
 , stdenv
 , lib
 , fetchFromGitHub
 , mach-nix
+, makeWrapper
 }:
 
 let
@@ -21,7 +22,7 @@ let
       # Remove things from requirements.txt that aren't necessary and mach-nix can't parse:
       # - Comment out Windows-specific "file://" line.
       # - Comment out ARMv7-specific "--only-binary" line.
-      requirementsOriginalText = builtins.readFile "${src}/requirements.txt";
+      requirementsOriginalText = builtins.readFile "${src}/tools/requirements/requirements.core.txt";
       requirementsText = builtins.replaceStrings
         [ "file://" "--only-binary" ]
         [ "#file://" "#--only-binary" ]
@@ -41,6 +42,8 @@ stdenv.mkDerivation rec {
   # This is so that downstream derivations will have IDF_PATH set.
   setupHook = ./setup-hook.sh;
 
+  nativeBuildInputs = [ makeWrapper ];
+
   propagatedBuildInputs = [
     # This is so that downstream derivations will run the Python setup hook and get PYTHONPATH set up correctly.
     pythonEnv.python
@@ -48,10 +51,13 @@ stdenv.mkDerivation rec {
 
   installPhase = ''
     mkdir -p $out
-    cp -r $src/* $out/
+    cp -rv . $out/
 
-    # Link the Python environment in so that in shell derivations, the Python
-    # setup hook will add the site-packages directory to PYTHONPATH.
-    ln -s ${pythonEnv}/lib $out/
+    # Link the Python environment in so that:
+    # - The setup hook can set IDF_PYTHON_ENV_PATH to it.
+    # - In shell derivations, the Python setup hook will add the site-packages
+    #   directory to PYTHONPATH.
+    ln -s ${pythonEnv} $out/python-env
+    ln -s ${pythonEnv}/lib $out/lib
   '';
 }

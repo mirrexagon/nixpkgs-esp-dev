@@ -7,7 +7,6 @@ pkgs.mkShell {
     gcc-xtensa-esp32s2-elf-bin
     openocd-esp32-bin
     esp-idf
-    esptool
 
     # Tools required to use ESP-IDF.
     git
