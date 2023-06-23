@@ -9,11 +9,11 @@ let
 in
 stdenv.mkDerivation rec {
   pname = "openocd";
-  version = "0.11.0-esp32-20220706";
+  version = "0.11.0-esp32-20221026";
 
   src = fetchurl {
     url = "https://github.com/espressif/openocd-esp32/releases/download/v${version}/openocd-esp32-linux-amd64-${version}.tar.gz";
-    hash = "sha256-JvHxjdk+twoTIDhI0/scwuDeH9Z0nH3XcbLehwlzWu0=";
+    hash = "sha256-zmPpsd+rYMxi2l3Cq8wiunA2xCr+dGcceH6wJnROfQs=";
   };
 
   buildInputs = [ makeWrapper ];
@@ -32,8 +32,8 @@ stdenv.mkDerivation rec {
   '';
 
   meta = with lib; {
-    description = "ESP32 toolchain";
-    homepage = https://docs.espressif.com/projects/esp-idf/en/stable/get-started/linux-setup.html;
+    description = "ESP32-compatible OpenOCD";
+    homepage = "https://github.com/espressif/openocd-esp32";
     license = licenses.gpl3;
   };
 }
