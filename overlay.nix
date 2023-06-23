@@ -14,23 +14,43 @@ let
     pkgs = final;
   };
 in
-{
-  # ESP32
-  gcc-xtensa-esp32-elf-bin = prev.callPackage ./pkgs/esp32-toolchain-bin.nix { };
-  esp32ulp-elf-bin = prev.callPackage ./pkgs/esp32-ulp-toolchain-bin.nix { };
+rec {
+  esp-idf-full = prev.callPackage ./pkgs/esp-idf { inherit mach-nix; };
 
-  # ESP32-C3
-  gcc-riscv32-esp32c3-elf-bin = prev.callPackage ./pkgs/esp32c3-toolchain-bin.nix { };
+  esp-idf-esp32 = esp-idf-full.override {
+    toolsToInclude = [
+      "xtensa-esp32-elf"
+      "esp32ulp-elf"
+      "openocd-esp32"
+      "xtensa-esp-elf-gdb"
+    ];
+  };
 
-  # ESP32-S2
-  gcc-xtensa-esp32s2-elf-bin = prev.callPackage ./pkgs/esp32s2-toolchain-bin.nix { };
+  esp-idf-esp32c3 = esp-idf-full.override {
+    toolsToInclude = [
+      "riscv32-esp-elf"
+      "openocd-esp32"
+      "riscv32-esp-elf-gdb"
+    ];
+  };
 
-  # ESP32-S3
-  gcc-xtensa-esp32s3-elf-bin = prev.callPackage ./pkgs/esp32s3-toolchain-bin.nix { };
+  esp-idf-esp32s2 = esp-idf-full.override {
+    toolsToInclude = [
+      "xtensa-esp32s2-elf"
+      "esp32ulp-elf"
+      "openocd-esp32"
+      "xtensa-esp-elf-gdb"
+    ];
+  };
 
-  openocd-esp32-bin = prev.callPackage ./pkgs/openocd-esp32-bin.nix { };
-
-  esp-idf = prev.callPackage ./pkgs/esp-idf { inherit mach-nix; };
+  esp-idf-esp32s3 = esp-idf-full.override {
+    toolsToInclude = [
+      "xtensa-esp32s3-elf"
+      "esp32ulp-elf"
+      "openocd-esp32"
+      "xtensa-esp-elf-gdb"
+    ];
+  };
 
   # ESP8266
   gcc-xtensa-lx106-elf-bin = prev.callPackage ./pkgs/esp8266-toolchain-bin.nix { };

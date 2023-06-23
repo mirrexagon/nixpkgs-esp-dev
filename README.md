@@ -14,13 +14,22 @@ Released into the public domain via CC0 (see `COPYING`).
 The easiest way to get started is to run one of these commands to get a development shell, without even needing to download the repository (requires Nix 2.4 or later):
 
 - `nix --experimental-features 'nix-command flakes' develop github:mirrexagon/nixpkgs-esp-dev#esp32-idf`: for ESP32 development with [esp-idf](https://github.com/espressif/esp-idf).
-    - Includes the ESP32 toolchain, esptool, the OpenOCD fork supporting ESP32, and downloads and sets up ESP-IDF with everything ready to use `idf.py`.
+    - Includes the ESP32 toolchain, and downloads and sets up ESP-IDF with everything ready to use `idf.py`.
 - `nix --experimental-features 'nix-command flakes' develop github:mirrexagon/nixpkgs-esp-dev#esp8266`: for ESP8266 development with eg. [esp-open-rtos](https://github.com/SuperHouse/esp-open-rtos)
     - Includes the ESP8266 toolchain and esptool.
+
+The full list of available shells (to go after the `#` in the command) are:
+
+- `esp-idf-full`: Includes toolchains for _all_ supported chips.
+- `esp32-idf`: Includes toolchain for the ESP32.
+- `esp32c3-idf`: Includes toolchain for the ESP32-C3.
+- `esp32s2-idf`: Includes toolchain for the ESP32-S2.
+- `esp32s3-idf`: Includes toolchain for the ESP32-S3.
 
 ### `nix-shell`
 If you're not using Nix 2.4+ or prefer not to need to enable flakes, you can clone the repo and use one of:
 
+- `nix-shell shells/esp32-idf-full.nix`
 - `nix-shell shells/esp32c3-idf.nix`
 - `nix-shell shells/esp32s2-idf.nix`
 - `nix-shell shells/esp32s3-idf.nix`
