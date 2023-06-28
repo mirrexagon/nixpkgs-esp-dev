@@ -27,6 +27,8 @@ The full list of available shells (to go after the `#` in the command) are:
 - `esp32s3-idf`: Includes toolchain for the ESP32-S3.
 
 ### `nix-shell`
+_NOTE: Due to updates to nixpkgs and the deprecation of `mach-nix`, this repository does not currently work with current nixpkgs version, and so these commands will fail. Use the `nix develop` command above to get a reproducible working environment._
+
 If you're not using Nix 2.4+ or prefer not to need to enable flakes, you can clone the repo and use one of:
 
 - `nix-shell shells/esp32-idf-full.nix`
