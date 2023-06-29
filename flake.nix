@@ -30,6 +30,8 @@
         esp32s3-idf = import ./shells/esp32s3-idf.nix { inherit pkgs; };
         esp8266 = import ./shells/esp8266.nix { inherit pkgs; };
       };
+
+      checks = import ./tests/build-idf-examples.nix { inherit pkgs; };
     });
 }
 
