@@ -1,10 +1,7 @@
 # nixpkgs-esp-dev
 ESP8266 and ESP32(-C3, -S2, -S3) packages and development environments for Nix.
 
-This repo contains derivations for:
-- Toolchains (compiler, linker, GDB, etc.) for `xtensa-lx106-elf` (ESP8266) and `xtensa-esp32-elf` (ESP32) using the official binaries from Espressif.
-- [ESP-IDF](https://github.com/espressif/esp-idf)
-- [OpenOCD for ESP32](https://github.com/espressif/openocd-esp32)
+This repo contains derivations for ESP-IDF, and most of the toolchains and tools it depends on (compilers for all supported targets, custom OpenOCD for Espressif chips, etc.).
 
 Released into the public domain via CC0 (see `COPYING`).
 
@@ -49,7 +46,7 @@ See `examples/shell-standalone.nix` for an example.
 
 
 ## Overriding ESP-IDF and ESP32 toolchain versions
-There are default versions of ESP-IDF and the ESP32 toolchain versions specified in `pkgs/esp32-toolchain-bin.nix` and `pkgs/esp-idf/default.nix`. To use a different version of ESP-IDF or to pin the versions, override the derivations with the desired versions and the hashes for them. Note that given versions of ESP-IDF require specific versions of the toolchain, which is why the versions of both are customizable.
+There is a default version of ESP-IDF specified in `pkgs/esp-idf/default.nix`. To use a different version of ESP-IDF or to pin the version, override a `esp-idf-*` derivations with the desired version and the hash for it. The correct version of the tools will be downloaded automatically.
 
 See `examples/shell-override-versions.nix` for an example.
 
