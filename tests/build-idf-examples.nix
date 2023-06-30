@@ -14,10 +14,8 @@ let
       phases = [ "buildPhase" ];
 
       buildPhase = ''
-        cp -r $IDF_PATH/examples/${example} $out
-        chmod -R +w $out
-
-        cd $out
+        cp -r $IDF_PATH/examples/${example}/* .
+        chmod -R +w .
 
         # The build system wants to create a cache directory somewhere in the home
         # directory, so we make up a home for it.
@@ -29,6 +27,9 @@ let
 
         idf.py set-target ${target}
         idf.py build
+
+        mkdir $out
+        cp -r * $out
       '';
     });
 
