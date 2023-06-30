@@ -14,9 +14,10 @@
 , stdenv
 , lib
 , fetchFromGitHub
-, mach-nix
 , makeWrapper
 , callPackage
+
+, python3
 
   # Tools for using ESP-IDF.
 , git
@@ -41,28 +42,39 @@ let
     fetchSubmodules = true;
   };
 
-  pythonEnv =
-    let
-      # Remove things from requirements.txt that aren't necessary and mach-nix can't parse:
-      # - Comment out Windows-specific "file://" line.
-      # - Comment out ARMv7-specific "--only-binary" line.
-      requirementsOriginalText = builtins.readFile "${src}/tools/requirements/requirements.core.txt";
-      requirementsText = builtins.replaceStrings
-        [ "file://" "--only-binary" ]
-        [ "#file://" "#--only-binary" ]
-        requirementsOriginalText;
-    in
-    mach-nix.mkPython
-      {
-        requirements = requirementsText;
-      };
-
   allTools = callPackage (import ./tools.nix) {
     toolSpecList = (builtins.fromJSON (builtins.readFile "${src}/tools/tools.json")).tools;
     versionSuffix = "esp-idf-${rev}";
   };
 
   toolDerivationsToInclude = builtins.map (toolName: allTools."${toolName}") toolsToInclude;
+
+  customPython =
+    (python3.withPackages
+      (pythonPackages:
+        let
+          customPythonPackages = callPackage (import ./python-packages.nix) { inherit pythonPackages; };
+        in
+        with pythonPackages;
+        with customPythonPackages;
+        [
+          # This list is from `tools/requirements/requirements.core.txt` in the
+          # ESP-IDF checkout.
+          setuptools
+          click
+          pyserial
+          future
+          cryptography
+          pyparsing
+          pyelftools
+          idf-component-manager
+          esp-coredump
+          esptool
+
+          kconfiglib
+
+          freertos_gdb
+        ]));
 in
 stdenv.mkDerivation rec {
   pname = "esp-idf";
@@ -76,8 +88,9 @@ stdenv.mkDerivation rec {
   nativeBuildInputs = [ makeWrapper ];
 
   propagatedBuildInputs = [
-    # This is so that downstream derivations will run the Python setup hook and get PYTHONPATH set up correctly.
-    pythonEnv.python
+    # This is in propagatedBuildInputs so that downstream derivations will run
+    # the Python setup hook and get PYTHONPATH set up correctly.
+    customPython
 
     # Tools required to use ESP-IDF.
     git
@@ -113,7 +126,7 @@ stdenv.mkDerivation rec {
     # - The setup hook can set IDF_PYTHON_ENV_PATH to it.
     # - In shell derivations, the Python setup hook will add the site-packages
     #   directory to PYTHONPATH.
-    ln -s ${pythonEnv} $out/python-env
-    ln -s ${pythonEnv}/lib $out/lib
+    ln -s ${customPython} $out/python-env
+    ln -s ${customPython}/lib $out/lib
   '';
 }
