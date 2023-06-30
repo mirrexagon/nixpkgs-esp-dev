@@ -20,11 +20,12 @@ The easiest way to get started is to run one of these commands to get a developm
 
 The full list of available shells (to go after the `#` in the command) are:
 
-- `esp-idf-full`: Includes toolchains for _all_ supported chips.
+- `esp-idf-full`: Includes toolchains for _all_ supported ESP32 chips (no ESP8266).
 - `esp32-idf`: Includes toolchain for the ESP32.
 - `esp32c3-idf`: Includes toolchain for the ESP32-C3.
 - `esp32s2-idf`: Includes toolchain for the ESP32-S2.
 - `esp32s3-idf`: Includes toolchain for the ESP32-S3.
+- `esp8266`: Includes toolchain for ESP8266 and esptool.
 
 ### `nix-shell`
 If you're not using Nix 2.4+ or prefer not to need to enable flakes, you can clone the repo and use one of:
