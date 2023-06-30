@@ -14,10 +14,10 @@
 , stdenv
 , lib
 , fetchFromGitHub
-, fetchurl
-, mach-nix
 , makeWrapper
-, buildFHSUserEnv
+, callPackage
+
+, python3
 
   # Tools for using ESP-IDF.
 , git
@@ -31,10 +31,6 @@
 , ninja
 , ncurses5
 , dfu-util
-
-  # Dependencies for binary tools.
-, zlib
-, libusb1
 }:
 
 let
@@ -46,118 +42,39 @@ let
     fetchSubmodules = true;
   };
 
-  pythonEnv =
-    let
-      # Remove things from requirements.txt that aren't necessary and mach-nix can't parse:
-      # - Comment out Windows-specific "file://" line.
-      # - Comment out ARMv7-specific "--only-binary" line.
-      requirementsOriginalText = builtins.readFile "${src}/tools/requirements/requirements.core.txt";
-      requirementsText = builtins.replaceStrings
-        [ "file://" "--only-binary" ]
-        [ "#file://" "#--only-binary" ]
-        requirementsOriginalText;
-    in
-    mach-nix.mkPython
-      {
-        requirements = requirementsText;
-      };
-
-  allTools =
-    let
-      toolFhsEnvTargetPackages = {
-        xtensa-esp-elf-gdb = pkgs: (with pkgs; [ ]);
-        riscv32-esp-elf-gdb = pkgs: (with pkgs; [ ]);
-        xtensa-esp32-elf = pkgs: (with pkgs; [ ]);
-        xtensa-esp32s2-elf = pkgs: (with pkgs; [ ]);
-        xtensa-esp32s3-elf = pkgs: (with pkgs; [ ]);
-        xtensa-clang = pkgs: (with pkgs; [ ]);
-        riscv32-esp-elf = pkgs: (with pkgs; [ ]);
-        esp32ulp-elf = pkgs: (with pkgs; [ ]);
-        openocd-esp32 = pkgs: (with pkgs; [ zlib libusb1 ]);
-      };
-
-      toolSpecList = (builtins.fromJSON (builtins.readFile "${src}/tools/tools.json")).tools;
-
-      toolSpecToDerivation = toolSpec:
-        let
-          targetVersionSpec = (builtins.elemAt toolSpec.versions 0).linux-amd64;
-        in
-        mkToolDerivation {
-          pname = toolSpec.name;
-
-          # NOTE: tools.json does not separately specify the versions of tools,
-          # so short of extracting the versions from the tarball URLs, we will
-          # just put the ESP-IDF version as the tool version.
-          version = "esp-idf-${rev}";
-
-          description = toolSpec.description;
-          homepage = toolSpec.info_url;
-          license = { spdxId = toolSpec.license; };
-          url = targetVersionSpec.url;
-          sha256 = targetVersionSpec.sha256;
-          targetPkgs = toolFhsEnvTargetPackages."${toolSpec.name}";
-          exportVars = toolSpec.export_vars;
-        };
-
-      mkToolDerivation =
-        { pname
-        , version
-        , description
-        , homepage
-        , license
-        , url
-        , sha256
-        , targetPkgs
-        , exportVars
-        }:
-
-        let
-          fhsEnv = buildFHSUserEnv {
-            name = "${pname}-env";
-            inherit targetPkgs;
-            runScript = "";
-          };
-
-          exportVarsWrapperArgsList = lib.attrsets.mapAttrsToList (name: value: "--set \"${name}\" \"${value}\"") exportVars;
-        in
-
-        assert stdenv.system == "x86_64-linux";
-
-        stdenv.mkDerivation rec {
-          inherit pname version;
-
-          src = fetchurl {
-            inherit url sha256;
-          };
-
-          buildInputs = [ makeWrapper ];
-
-          phases = [ "unpackPhase" "installPhase" ];
-
-          installPhase = ''
-            cp -r . $out
-
-            # For setting exported variables (see exportVarsWrapperArgsList).
-            TOOL_PATH=$out
-
-            for FILE in $(ls $out/bin); do
-              FILE_PATH="$out/bin/$FILE"
-              if [[ -x $FILE_PATH ]]; then
-                mv $FILE_PATH $FILE_PATH-unwrapped
-                makeWrapper ${fhsEnv}/bin/${pname}-env $FILE_PATH --add-flags "$FILE_PATH-unwrapped" ${lib.strings.concatStringsSep " " exportVarsWrapperArgsList}
-              fi
-            done
-          '';
-
-          meta = with lib; {
-            inherit description homepage license;
-          };
-        };
-
-    in
-    builtins.listToAttrs (builtins.map (toolSpec: lib.attrsets.nameValuePair toolSpec.name (toolSpecToDerivation toolSpec)) toolSpecList);
+  allTools = callPackage (import ./tools.nix) {
+    toolSpecList = (builtins.fromJSON (builtins.readFile "${src}/tools/tools.json")).tools;
+    versionSuffix = "esp-idf-${rev}";
+  };
 
   toolDerivationsToInclude = builtins.map (toolName: allTools."${toolName}") toolsToInclude;
+
+  customPython =
+    (python3.withPackages
+      (pythonPackages:
+        let
+          customPythonPackages = callPackage (import ./python-packages.nix) { inherit pythonPackages; };
+        in
+        with pythonPackages;
+        with customPythonPackages;
+        [
+          # This list is from `tools/requirements/requirements.core.txt` in the
+          # ESP-IDF checkout.
+          setuptools
+          click
+          pyserial
+          future
+          cryptography
+          pyparsing
+          pyelftools
+          idf-component-manager
+          esp-coredump
+          esptool
+
+          kconfiglib
+
+          freertos_gdb
+        ]));
 in
 stdenv.mkDerivation rec {
   pname = "esp-idf";
@@ -171,8 +88,9 @@ stdenv.mkDerivation rec {
   nativeBuildInputs = [ makeWrapper ];
 
   propagatedBuildInputs = [
-    # This is so that downstream derivations will run the Python setup hook and get PYTHONPATH set up correctly.
-    pythonEnv.python
+    # This is in propagatedBuildInputs so that downstream derivations will run
+    # the Python setup hook and get PYTHONPATH set up correctly.
+    customPython
 
     # Tools required to use ESP-IDF.
     git
@@ -208,7 +126,7 @@ stdenv.mkDerivation rec {
     # - The setup hook can set IDF_PYTHON_ENV_PATH to it.
     # - In shell derivations, the Python setup hook will add the site-packages
     #   directory to PYTHONPATH.
-    ln -s ${pythonEnv} $out/python-env
-    ln -s ${pythonEnv}/lib $out/lib
+    ln -s ${customPython} $out/python-env
+    ln -s ${customPython}/lib $out/lib
   '';
 }
