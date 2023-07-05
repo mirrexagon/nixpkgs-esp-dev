@@ -11,13 +11,15 @@ rec {
     ];
   };
 
-  esp-idf-esp32c3 = esp-idf-full.override {
+  esp-idf-riscv = esp-idf-full.override {
     toolsToInclude = [
       "riscv32-esp-elf"
       "openocd-esp32"
       "riscv32-esp-elf-gdb"
     ];
   };
+
+  esp-idf-esp32c3 = esp-idf-riscv;
 
   esp-idf-esp32s2 = esp-idf-full.override {
     toolsToInclude = [
@@ -36,6 +38,10 @@ rec {
       "xtensa-esp-elf-gdb"
     ];
   };
+
+  esp-idf-esp32c6 = esp-idf-riscv;
+
+  esp-idf-esp32h2 = esp-idf-riscv;
 
   # ESP8266
   gcc-xtensa-lx106-elf-bin = prev.callPackage ./pkgs/esp8266-toolchain-bin.nix { };
