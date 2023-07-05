@@ -3,7 +3,7 @@
 let
   fhsEnv = buildFHSUserEnv {
     name = "esp8266-toolchain-env";
-    targetPkgs = pkgs: with pkgs; [ zlib ];
+    targetPkgs = pkgs: with pkgs; [ ];
     runScript = "";
   };
 in
