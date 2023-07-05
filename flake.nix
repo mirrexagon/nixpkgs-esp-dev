@@ -36,7 +36,7 @@
         esp8266-rtos-sdk = import ./shells/esp8266-rtos-sdk.nix { inherit pkgs; };
       };
 
-      checks = import ./tests/build-idf-examples.nix { inherit pkgs; };
+      checks = (import ./tests/build-idf-examples.nix { inherit pkgs; }) // (import ./tests/build-esp8266-example.nix { inherit pkgs; });
     });
 }
 
