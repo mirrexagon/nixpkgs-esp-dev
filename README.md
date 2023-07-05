@@ -12,8 +12,8 @@ The easiest way to get started is to run one of these commands to get a developm
 
 - `nix --experimental-features 'nix-command flakes' develop github:mirrexagon/nixpkgs-esp-dev#esp32-idf`: for ESP32 development with [esp-idf](https://github.com/espressif/esp-idf).
     - Includes the ESP32 toolchain, and downloads and sets up ESP-IDF with everything ready to use `idf.py`.
-- `nix --experimental-features 'nix-command flakes' develop github:mirrexagon/nixpkgs-esp-dev#esp8266`: for ESP8266 development with eg. [esp-open-rtos](https://github.com/SuperHouse/esp-open-rtos)
-    - Includes the ESP8266 toolchain and esptool.
+- `nix --experimental-features 'nix-command flakes' develop github:mirrexagon/nixpkgs-esp-dev#esp8266-rtos-sdk`: for ESP8266 development with [ESP8266_RTOS_SDK](https://github.com/espressif/ESP8266_RTOS_SDK).
+    - Includes the ESP8266 toolchain, ESP8266_RTOS_SDK, and esptool.
 
 The full list of available shells (to go after the `#` in the command) are:
 
@@ -22,7 +22,7 @@ The full list of available shells (to go after the `#` in the command) are:
 - `esp32c3-idf`: Includes toolchain for the ESP32-C3.
 - `esp32s2-idf`: Includes toolchain for the ESP32-S2.
 - `esp32s3-idf`: Includes toolchain for the ESP32-S3.
-- `esp8266`: Includes toolchain for ESP8266 and esptool.
+- `esp8266-rtos-sdk`: Includes toolchain for ESP8266 and esptool.
 
 ### `nix-shell`
 If you're not using Nix 2.4+ or prefer not to need to enable flakes, you can clone the repo and use one of:
@@ -32,7 +32,7 @@ If you're not using Nix 2.4+ or prefer not to need to enable flakes, you can clo
 - `nix-shell shells/esp32s2-idf.nix`
 - `nix-shell shells/esp32s3-idf.nix`
 - `nix-shell shells/esp32-idf.nix`
-- `nix-shell shells/esp8266.nix`
+- `nix-shell shells/esp8266-rtos-sdk.nix`
 
 to get the same shells as with `nix develop`.
 
