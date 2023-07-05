@@ -19,7 +19,7 @@ let
     xtensa-esp32-elf = pkgs: (with pkgs; [ ]);
     xtensa-esp32s2-elf = pkgs: (with pkgs; [ ]);
     xtensa-esp32s3-elf = pkgs: (with pkgs; [ ]);
-    xtensa-clang = pkgs: (with pkgs; [ ]);
+    esp-clang = pkgs: (with pkgs; [ zlib libxml2 ]);
     riscv32-esp-elf = pkgs: (with pkgs; [ ]);
     esp32ulp-elf = pkgs: (with pkgs; [ ]);
     openocd-esp32 = pkgs: (with pkgs; [ zlib libusb1 ]);

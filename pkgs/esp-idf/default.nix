@@ -1,12 +1,12 @@
-{ rev ? "v5.0.2"
-, sha256 ? "sha256-dlmtTjoz4qQdFG229v9bIHKpYBzjM44fv+XhdDBu2Os="
+{ rev ? "v5.1"
+, sha256 ? "sha256-IEa9R9VCWvbRjZFRPb2Qq2Qw1RFxsnVALFVgQlBCXMw="
 , toolsToInclude ? [
     "xtensa-esp-elf-gdb"
     "riscv32-esp-elf-gdb"
     "xtensa-esp32-elf"
     "xtensa-esp32s2-elf"
     "xtensa-esp32s3-elf"
-    "xtensa-clang"
+    "esp-clang"
     "riscv32-esp-elf"
     "esp32ulp-elf"
     "openocd-esp32"
@@ -63,15 +63,15 @@ let
           setuptools
           click
           pyserial
-          future
           cryptography
           pyparsing
           pyelftools
           idf-component-manager
           esp-coredump
           esptool
-
-          kconfiglib
+          esp-idf-kconfig
+          esp-idf-monitor
+          esp-idf-size
 
           freertos_gdb
         ]));
