@@ -35,7 +35,6 @@ rec {
 
     propagatedBuildInputs = [
       cachecontrol
-      lockfile
       cffi
       click
       colorama
@@ -49,7 +48,7 @@ rec {
       schema
       six
       tqdm
-    ];
+    ] ++ cachecontrol.optional-dependencies.filecache;
 
     meta = {
       homepage = "https://github.com/espressif/idf-component-manager";
