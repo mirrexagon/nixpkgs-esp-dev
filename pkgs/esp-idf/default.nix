@@ -26,7 +26,7 @@
 , flex
 , bison
 , gperf
-, pkgconfig
+, pkg-config
 , cmake
 , ninja
 , ncurses5
@@ -100,7 +100,7 @@ stdenv.mkDerivation rec {
     flex
     bison
     gperf
-    pkgconfig
+    pkg-config
 
     cmake
     ninja
