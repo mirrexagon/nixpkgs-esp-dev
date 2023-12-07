@@ -1,5 +1,5 @@
-{ rev ? "v5.1"
-, sha256 ? "sha256-IEa9R9VCWvbRjZFRPb2Qq2Qw1RFxsnVALFVgQlBCXMw="
+{ rev ? "v5.1.2"
+, sha256 ? "sha256-uEf3/3NPH+E39VgQ02AbxTG7nmG5bQlhwk/WcTeAUfg="
 , toolsToInclude ? [
     "xtensa-esp-elf-gdb"
     "riscv32-esp-elf-gdb"
@@ -72,6 +72,7 @@ let
           esp-idf-kconfig
           esp-idf-monitor
           esp-idf-size
+          esp-idf-panic-decoder
 
           freertos_gdb
         ]));
