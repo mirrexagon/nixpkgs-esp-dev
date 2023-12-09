@@ -182,5 +182,28 @@ rec {
       homepage = "https://github.com/espressif/freertos-gdb";
     };
   };
+
+  esp-idf-panic-decoder = buildPythonPackage rec {
+    pname = "esp-idf-panic-decoder";
+    version = "0.2.0";
+
+    format = "pyproject";
+    
+    src = fetchPypi {
+      inherit version;
+      pname = "esp_idf_panic_decoder";
+      sha256 = "sha256-t1pg+L7WWVoVZ7weE/CUdMJsgRQvLEUE/GVeJpt0kKI=";
+    };
+
+    doCheck = false;
+
+    propagatedBuildInputs = [
+      setuptools
+    ];
+
+    meta = {
+      homepage = "https://github.com/espressif/esp-idf-panic-decoder";
+    };
+  };
 }
 
