@@ -16,6 +16,7 @@
       packages = {
         inherit (pkgs)
           esp-idf-full
+          esp-idf-esp32
           esp-idf-esp32c3
           esp-idf-esp32s2
           esp-idf-esp32s3
