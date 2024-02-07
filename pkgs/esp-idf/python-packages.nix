@@ -38,17 +38,22 @@ rec {
       cffi
       click
       colorama
-      contextlib2
       packaging
       pyyaml
       requests
-      urllib3
       requests-file
       requests-toolbelt
       schema
       six
       tqdm
     ] ++ cachecontrol.optional-dependencies.filecache;
+
+    # setup.py says it needs these deps, but it actually doesn't. contextlib2
+    # isn't supported on some pythons and urllib3 is pinned to an old version
+    postPatch = ''
+      sed -i '/contextlib2/d' setup.py
+      sed -i '/urllib3/d' setup.py
+    '';
 
     meta = {
       homepage = "https://github.com/espressif/idf-component-manager";
