@@ -89,9 +89,12 @@ let
 
       installPhase = let
         wrapCmd = if system == "linux-x86_64" then
-      ''makeWrapper ${fhsEnv}/bin/${pname}-env $FILE_PATH --add-flags "$FILE_PATH-unwrapped" ${lib.strings.concatStringsSep " " exportVarsWrapperArgsList}''
+        ''
+          makeWrapper ${fhsEnv}/bin/${pname}-env $FILE_PATH --add-flags "$FILE_PATH-unwrapped" ${lib.strings.concatStringsSep " " exportVarsWrapperArgsList}
+          mv $FILE_PATH $FILE_PATH-unwrapped
+        ''
       else
-      ''makeWrapper $FILE_PATH-unwrapped $FILE_PATH ${lib.strings.concatStringsSep " " exportVarsWrapperArgsList}'';
+      ''wrapProgram $FILE_PATH ${lib.strings.concatStringsSep " " exportVarsWrapperArgsList}'';
       in ''
         cp -r . $out
 
@@ -101,8 +104,7 @@ let
         for FILE in $(ls $out/bin); do
           FILE_PATH="$out/bin/$FILE"
           if [[ -x $FILE_PATH ]]; then
-            mv $FILE_PATH $FILE_PATH-unwrapped
-            $wrapCmd
+            ${wrapCmd}
           fi
         done
       '';
