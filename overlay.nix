@@ -4,7 +4,7 @@ rec {
 
   esp-idf-esp32 = esp-idf-full.override {
     toolsToInclude = [
-      "xtensa-esp32-elf"
+      "xtensa-esp-elf"
       "esp32ulp-elf"
       "openocd-esp32"
       "xtensa-esp-elf-gdb"
@@ -23,7 +23,7 @@ rec {
 
   esp-idf-esp32s2 = esp-idf-full.override {
     toolsToInclude = [
-      "xtensa-esp32s2-elf"
+      "xtensa-esp-elf"
       "esp32ulp-elf"
       "openocd-esp32"
       "xtensa-esp-elf-gdb"
@@ -32,7 +32,7 @@ rec {
 
   esp-idf-esp32s3 = esp-idf-full.override {
     toolsToInclude = [
-      "xtensa-esp32s3-elf"
+      "xtensa-esp-elf"
       "esp32ulp-elf"
       "openocd-esp32"
       "xtensa-esp-elf-gdb"

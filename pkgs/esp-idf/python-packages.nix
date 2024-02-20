@@ -1,6 +1,6 @@
 # Versions based on
-# https://dl.espressif.com/dl/esp-idf/espidf.constraints.v5.1.txt
-# on 2023-07-05.
+# https://dl.espressif.com/dl/esp-idf/espidf.constraints.v5.2.txt
+# on 2024-02-20.
 
 { stdenv
 , lib
@@ -229,6 +229,18 @@ rec {
     meta = {
       homepage = "https://github.com/espressif/esp-idf-panic-decoder";
     };
+  };
+
+  pyclang = buildPythonPackage rec {
+    pname = "pyclang";
+    version = "0.4.2";
+
+    src = fetchPypi {
+      inherit pname version;
+      sha256 = "sha256-vuDZ5yEhyDpCmkXoC+Gr2X5vMK5B46HnktcvBONjxXM=";
+    };
+
+    doCheck = false;
   };
 }
 

@@ -1,11 +1,9 @@
-{ rev ? "v5.2.2"
-, sha256 ? "sha256-I4YxxSGdQT8twkoFx3zmZhyLTSagmeLD2pygVfY/pEk="
+{ rev ? "v5.2.1"
+, sha256 ? "sha256-0WwDcasG7JjRJIaZyjWTobKhZXUi4pcSHFMtTbBJE1g="
 , toolsToInclude ? [
     "xtensa-esp-elf-gdb"
     "riscv32-esp-elf-gdb"
-    "xtensa-esp32-elf"
-    "xtensa-esp32s2-elf"
-    "xtensa-esp32s3-elf"
+    "xtensa-esp-elf"
     "esp-clang"
     "riscv32-esp-elf"
     "esp32ulp-elf"
@@ -74,6 +72,7 @@ let
           esp-idf-size
           esp-idf-panic-decoder
           pyclang
+
           freertos_gdb
 
           # The esp idf vscode extension seems to want pip, too
@@ -90,8 +89,6 @@ stdenv.mkDerivation rec {
   setupHook = ./setup-hook.sh;
 
   nativeBuildInputs = [ makeWrapper ];
-
-  patches = [ ];
 
   propagatedBuildInputs = [
     # This is in propagatedBuildInputs so that downstream derivations will run
