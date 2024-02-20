@@ -1,11 +1,9 @@
-{ rev ? "v5.1.2"
-, sha256 ? "sha256-uEf3/3NPH+E39VgQ02AbxTG7nmG5bQlhwk/WcTeAUfg="
+{ rev ? "v5.2.1"
+, sha256 ? "sha256-0WwDcasG7JjRJIaZyjWTobKhZXUi4pcSHFMtTbBJE1g="
 , toolsToInclude ? [
     "xtensa-esp-elf-gdb"
     "riscv32-esp-elf-gdb"
-    "xtensa-esp32-elf"
-    "xtensa-esp32s2-elf"
-    "xtensa-esp32s3-elf"
+    "xtensa-esp-elf"
     "esp-clang"
     "riscv32-esp-elf"
     "esp32ulp-elf"
@@ -73,6 +71,7 @@ let
           esp-idf-monitor
           esp-idf-size
           esp-idf-panic-decoder
+          pyclang
 
           freertos_gdb
 
