@@ -2,6 +2,7 @@
 , versionSuffix # A string to use in the version of the tool derivations.
 
 , stdenv
+, system
 , lib
 , fetchurl
 , buildFHSUserEnv
@@ -24,10 +25,17 @@ let
     esp32ulp-elf = pkgs: (with pkgs; [ ]);
     openocd-esp32 = pkgs: (with pkgs; [ zlib libusb1 ]);
   };
+  # Map nix system strings to the platforms listed in tools.json
+  systemToToolPlatformString = {
+    "x86_64-linux" = "linux-amd64";
+    "x86_64-darwin" = "macos";
+    "aarch64-darwin" = "macos-arm64";
+  };
 
   toolSpecToDerivation = toolSpec:
     let
-      targetVersionSpec = (builtins.elemAt toolSpec.versions 0).linux-amd64;
+      targetPlatform = systemToToolPlatformString.${system};
+      targetVersionSpec = (builtins.elemAt toolSpec.versions 0).${targetPlatform};
     in
     mkToolDerivation {
       pname = toolSpec.name;
@@ -68,8 +76,6 @@ let
       exportVarsWrapperArgsList = lib.attrsets.mapAttrsToList (name: value: "--set \"${name}\" \"${value}\"") exportVars;
     in
 
-    assert stdenv.system == "x86_64-linux";
-
     stdenv.mkDerivation rec {
       inherit pname version;
 
@@ -81,7 +87,15 @@ let
 
       phases = [ "unpackPhase" "installPhase" ];
 
-      installPhase = ''
+      installPhase = let
+        wrapCmd = if system == "linux-x86_64" then
+        ''
+          makeWrapper ${fhsEnv}/bin/${pname}-env $FILE_PATH --add-flags "$FILE_PATH-unwrapped" ${lib.strings.concatStringsSep " " exportVarsWrapperArgsList}
+          mv $FILE_PATH $FILE_PATH-unwrapped
+        ''
+      else
+      ''wrapProgram $FILE_PATH ${lib.strings.concatStringsSep " " exportVarsWrapperArgsList}'';
+      in ''
         cp -r . $out
 
         # For setting exported variables (see exportVarsWrapperArgsList).
@@ -90,8 +104,7 @@ let
         for FILE in $(ls $out/bin); do
           FILE_PATH="$out/bin/$FILE"
           if [[ -x $FILE_PATH ]]; then
-            mv $FILE_PATH $FILE_PATH-unwrapped
-            makeWrapper ${fhsEnv}/bin/${pname}-env $FILE_PATH --add-flags "$FILE_PATH-unwrapped" ${lib.strings.concatStringsSep " " exportVarsWrapperArgsList}
+            ${wrapCmd}
           fi
         done
       '';

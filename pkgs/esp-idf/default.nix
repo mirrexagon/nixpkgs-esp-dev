@@ -75,6 +75,9 @@ let
           esp-idf-panic-decoder
 
           freertos_gdb
+
+          # The esp idf vscode extension seems to want pip, too
+          pip
         ]));
 in
 stdenv.mkDerivation rec {
