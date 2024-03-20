@@ -11,6 +11,7 @@
   # Dependencies for the various binary tools.
 , zlib
 , libusb1
+, udev
 }:
 
 let
@@ -23,7 +24,7 @@ let
     esp-clang = pkgs: (with pkgs; [ zlib libxml2 ]);
     riscv32-esp-elf = pkgs: (with pkgs; [ ]);
     esp32ulp-elf = pkgs: (with pkgs; [ ]);
-    openocd-esp32 = pkgs: (with pkgs; [ zlib libusb1 ]);
+    openocd-esp32 = pkgs: (with pkgs; [ zlib libusb1 udev ]);
   };
   # Map nix system strings to the platforms listed in tools.json
   systemToToolPlatformString = {
