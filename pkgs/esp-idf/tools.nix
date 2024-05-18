@@ -108,6 +108,10 @@ let
             ${wrapCmd}
           fi
         done
+
+        # Fix openocd scripts path
+        mkdir $out/openocd-esp32
+        ln -s $out/share $out/openocd-esp32
       '';
 
       meta = with lib; {
