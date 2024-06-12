@@ -91,6 +91,10 @@ stdenv.mkDerivation rec {
 
   nativeBuildInputs = [ makeWrapper ];
 
+  # Do not preserve file modes when copying templates as the nix store is read-only.
+  # create-project will fail without this.
+  patches = [ ./template-modes.patch ];
+
   propagatedBuildInputs = [
     # This is in propagatedBuildInputs so that downstream derivations will run
     # the Python setup hook and get PYTHONPATH set up correctly.
