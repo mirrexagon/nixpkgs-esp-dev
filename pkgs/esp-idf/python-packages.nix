@@ -169,6 +169,26 @@ rec {
     };
   };
 
+  pyclang = buildPythonPackage rec {
+    pname = "pyclang";
+    version = "0.4.2";
+
+    src = fetchPypi {
+      inherit pname version;
+      sha256 = "sha256-vuDZ5yEhyDpCmkXoC+Gr2X5vMK5B46HnktcvBONjxXM=";
+    };
+
+    doCheck = false;
+
+    propagatedBuildInputs = [
+      
+    ];
+
+    meta = {
+      homepage = "https://pypi.org/project/pyclang/";
+    };
+  };
+
   freertos_gdb = buildPythonPackage rec {
     pname = "freertos-gdb";
     version = "1.0.2";

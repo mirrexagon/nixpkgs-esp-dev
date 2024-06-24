@@ -1,5 +1,5 @@
-{ rev ? "v5.1.3"
-, sha256 ? "sha256-0QsIFOcSx1N15t5po3TyOaNvpzBUfKaFdsRODOBoXCI="
+{ rev ? "v5.2.2"
+, sha256 ? "sha256-I4YxxSGdQT8twkoFx3zmZhyLTSagmeLD2pygVfY/pEk="
 , toolsToInclude ? [
     "xtensa-esp-elf-gdb"
     "riscv32-esp-elf-gdb"
@@ -73,7 +73,7 @@ let
           esp-idf-monitor
           esp-idf-size
           esp-idf-panic-decoder
-
+          pyclang
           freertos_gdb
 
           # The esp idf vscode extension seems to want pip, too
@@ -91,9 +91,7 @@ stdenv.mkDerivation rec {
 
   nativeBuildInputs = [ makeWrapper ];
 
-  # Do not preserve file modes when copying templates as the nix store is read-only.
-  # create-project will fail without this.
-  patches = [ ./template-modes.patch ];
+  patches = [ ];
 
   propagatedBuildInputs = [
     # This is in propagatedBuildInputs so that downstream derivations will run
