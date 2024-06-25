@@ -1,6 +1,6 @@
 # Versions based on
-# https://dl.espressif.com/dl/esp-idf/espidf.constraints.v5.1.txt
-# on 2023-07-05.
+# https://dl.espressif.com/dl/esp-idf/espidf.constraints.v5.2.txt
+# on 2024-02-20.
 
 { stdenv
 , lib
@@ -169,6 +169,22 @@ rec {
     };
   };
 
+  pyclang = buildPythonPackage rec {
+    pname = "pyclang";
+    version = "0.4.2";
+
+    src = fetchPypi {
+      inherit pname version;
+      sha256 = "sha256-vuDZ5yEhyDpCmkXoC+Gr2X5vMK5B46HnktcvBONjxXM=";
+    };
+
+    doCheck = false;
+
+    meta = {
+      homepage = "https://pypi.org/project/pyclang/";
+    };
+  };
+
   freertos_gdb = buildPythonPackage rec {
     pname = "freertos-gdb";
     version = "1.0.2";
@@ -210,5 +226,6 @@ rec {
       homepage = "https://github.com/espressif/esp-idf-panic-decoder";
     };
   };
+
 }
 
