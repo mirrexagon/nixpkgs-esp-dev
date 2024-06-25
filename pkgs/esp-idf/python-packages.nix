@@ -180,10 +180,6 @@ rec {
 
     doCheck = false;
 
-    propagatedBuildInputs = [
-      
-    ];
-
     meta = {
       homepage = "https://pypi.org/project/pyclang/";
     };
@@ -231,16 +227,5 @@ rec {
     };
   };
 
-  pyclang = buildPythonPackage rec {
-    pname = "pyclang";
-    version = "0.4.2";
-
-    src = fetchPypi {
-      inherit pname version;
-      sha256 = "sha256-vuDZ5yEhyDpCmkXoC+Gr2X5vMK5B46HnktcvBONjxXM=";
-    };
-
-    doCheck = false;
-  };
 }
 
