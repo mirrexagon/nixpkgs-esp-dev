@@ -131,5 +131,14 @@ stdenv.mkDerivation rec {
     #   directory to PYTHONPATH.
     ln -s ${customPython} $out/python-env
     ln -s ${customPython}/lib $out/lib
+
+    # make esp-idf cmake git version detection happy
+    cd $out
+    git init .
+    git config user.email "nixbld@localhost"
+    git config user.name "nixbld"
+    git commit --date="1970-01-01 00:00:00" --allow-empty -m "make idf happy"
+
+
   '';
 }
