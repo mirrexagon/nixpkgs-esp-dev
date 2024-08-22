@@ -102,6 +102,20 @@ rec {
       pyyaml
     ];
 
+    # Replaces esptool.py import with .esptool.py-wrapped
+    postInstall = ''
+      sed -i "2s|^|\n\
+      #fix import esptool patch\n\
+      import importlib.util\n\
+      import importlib.machinery\n\
+      esptool_loader = importlib.machinery.SourceFileLoader(\"esptool\", \"$out/bin/.esptool.py-wrapped\")\n\
+      esptool_spec = importlib.util.spec_from_loader(\"esptool\", esptool_loader)\n\
+      esptool_module = importlib.util.module_from_spec(esptool_spec)\n\
+      esptool_spec.loader.exec_module(esptool_module)\n\
+      sys.modules[\"esptool\"] = esptool_module\n\
+      #end of fix import esptool patch\n|" $out/bin/esp_rfc2217_server.py
+    '';
+
     meta = {
       homepage = "https://github.com/espressif/esptool";
     };
