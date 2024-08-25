@@ -1,5 +1,5 @@
-{ rev ? "v5.2.2"
-, sha256 ? "sha256-I4YxxSGdQT8twkoFx3zmZhyLTSagmeLD2pygVfY/pEk="
+{ rev ? "v5.3"
+, sha256 ? "sha256-w+xyva4t21STVtfYZOXY2xw6sDc2XvJXBZSx+wd1N6Y="
 , toolsToInclude ? [
     "xtensa-esp-elf-gdb"
     "riscv32-esp-elf-gdb"
@@ -69,6 +69,7 @@ let
           esptool
           esp-idf-kconfig
           esp-idf-monitor
+          esp-idf-nvs-partition-gen
           esp-idf-size
           esp-idf-panic-decoder
           pyclang
@@ -132,6 +133,6 @@ stdenv.mkDerivation rec {
     ln -s ${customPython} $out/python-env
     ln -s ${customPython}/lib $out/lib
 
-    echo "5.2.2-joakim" > $out/version.txt
+    echo "5.3-joakim" > $out/version.txt
  '';
 }

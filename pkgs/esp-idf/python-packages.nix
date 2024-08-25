@@ -168,6 +168,32 @@ rec {
       homepage = "https://github.com/espressif/esp-idf-size";
     };
   };
+  
+  esp-idf-nvs-partition-gen = buildPythonPackage rec {
+    pname = "esp-idf-nvs-partition-gen";
+    version = "0.1.2";
+    pyproject = true;
+
+    src = fetchPypi {
+      inherit version;
+      pname = "esp_idf_nvs_partition_gen";
+      hash = "sha256-HjW5RCKfy83LQgAs0tOW/f9LPVoLwHY1pyb6ar+AxwY=";
+    };
+
+    build-system = [
+      setuptools
+    ];
+
+    dependencies = [
+      cryptography
+    ];
+
+    pythonImportsCheck = [ "esp_idf_nvs_partition_gen" ];
+
+    meta = {
+      homepage = "https://pypi.org/project/esp-idf-nvs-partition-gen/";
+    };
+  };
 
   pyclang = buildPythonPackage rec {
     pname = "pyclang";
