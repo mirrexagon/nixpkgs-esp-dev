@@ -38,7 +38,6 @@ let
     rev = rev;
     sha256 = sha256;
     fetchSubmodules = true;
-    leaveDotGit = true;
   };
 
   allTools = callPackage (import ./tools.nix) {
