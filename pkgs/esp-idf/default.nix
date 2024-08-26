@@ -132,7 +132,5 @@ stdenv.mkDerivation rec {
     #   directory to PYTHONPATH.
     ln -s ${customPython} $out/python-env
     ln -s ${customPython}/lib $out/lib
-
-    echo "5.3-joakim" > $out/version.txt
- '';
+  '';
 }
