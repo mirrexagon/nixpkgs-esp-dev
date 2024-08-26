@@ -52,6 +52,8 @@ See `examples/shell-standalone.nix` for an example.
 ## Overriding ESP-IDF and ESP32 toolchain versions
 There is a default version of ESP-IDF specified in `pkgs/esp-idf/default.nix`. To use a different version of ESP-IDF or to pin the version, override a `esp-idf-*` derivations with the desired version and the hash for it. The correct version of the tools will be downloaded automatically.
 
+NOTE: This doesn't quite work as it should - Python packages won't be adapted for the version you override to. See https://github.com/mirrexagon/nixpkgs-esp-dev/issues/25
+
 See `examples/shell-override-versions.nix` for an example.
 
 
