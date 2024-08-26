@@ -18,9 +18,7 @@ let
   toolFhsEnvTargetPackages = {
     xtensa-esp-elf-gdb = pkgs: (with pkgs; [ ]);
     riscv32-esp-elf-gdb = pkgs: (with pkgs; [ ]);
-    xtensa-esp32-elf = pkgs: (with pkgs; [ ]);
-    xtensa-esp32s2-elf = pkgs: (with pkgs; [ ]);
-    xtensa-esp32s3-elf = pkgs: (with pkgs; [ ]);
+    xtensa-esp-elf = pkgs: (with pkgs; [ ]);
     esp-clang = pkgs: (with pkgs; [ zlib libxml2 ]);
     riscv32-esp-elf = pkgs: (with pkgs; [ ]);
     esp32ulp-elf = pkgs: (with pkgs; [ ]);
@@ -92,8 +90,10 @@ let
       installPhase = let
         wrapCmd = if (system == "x86_64-linux") || (system == "aarch64-linux") then
         ''
-          mv $FILE_PATH $FILE_PATH-unwrapped
-          makeWrapper ${fhsEnv}/bin/${pname}-env $FILE_PATH --add-flags "$FILE_PATH-unwrapped" ${lib.strings.concatStringsSep " " exportVarsWrapperArgsList}
+          [ ! -d $out/unwrapped_bin ] && mkdir $out/unwrapped_bin
+          WRAPPED_FILE_PATH="$out/unwrapped_bin/$(basename $FILE_PATH)"
+          mv $FILE_PATH $WRAPPED_FILE_PATH
+          makeWrapper ${fhsEnv}/bin/${pname}-env $FILE_PATH --add-flags $WRAPPED_FILE_PATH ${lib.strings.concatStringsSep " " exportVarsWrapperArgsList}
         ''
       else
       ''wrapProgram $FILE_PATH ${lib.strings.concatStringsSep " " exportVarsWrapperArgsList}'';

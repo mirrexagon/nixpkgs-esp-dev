@@ -1,11 +1,9 @@
-{ rev ? "v5.1.3"
-, sha256 ? "sha256-0QsIFOcSx1N15t5po3TyOaNvpzBUfKaFdsRODOBoXCI="
+{ rev ? "v5.3"
+, sha256 ? "sha256-w+xyva4t21STVtfYZOXY2xw6sDc2XvJXBZSx+wd1N6Y="
 , toolsToInclude ? [
     "xtensa-esp-elf-gdb"
     "riscv32-esp-elf-gdb"
-    "xtensa-esp32-elf"
-    "xtensa-esp32s2-elf"
-    "xtensa-esp32s3-elf"
+    "xtensa-esp-elf"
     "esp-clang"
     "riscv32-esp-elf"
     "esp32ulp-elf"
@@ -71,8 +69,10 @@ let
           esptool
           esp-idf-kconfig
           esp-idf-monitor
+          esp-idf-nvs-partition-gen
           esp-idf-size
           esp-idf-panic-decoder
+          pyclang
 
           freertos_gdb
 
@@ -90,10 +90,6 @@ stdenv.mkDerivation rec {
   setupHook = ./setup-hook.sh;
 
   nativeBuildInputs = [ makeWrapper ];
-
-  # Do not preserve file modes when copying templates as the nix store is read-only.
-  # create-project will fail without this.
-  patches = [ ./template-modes.patch ];
 
   propagatedBuildInputs = [
     # This is in propagatedBuildInputs so that downstream derivations will run
@@ -136,5 +132,7 @@ stdenv.mkDerivation rec {
     #   directory to PYTHONPATH.
     ln -s ${customPython} $out/python-env
     ln -s ${customPython}/lib $out/lib
-  '';
+
+    echo "5.3-joakim" > $out/version.txt
+ '';
 }
