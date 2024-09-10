@@ -126,6 +126,13 @@ stdenv.mkDerivation rec {
     mkdir -p $out
     cp -rv . $out/
 
+    # Override the version read by ESP IDF (as it can't be read in the usual way
+    # since we don't include the .git directory with that metadata).
+    # NOTE: This doesn't perfectly replicate the way the commit name is
+    # formatted with the standard behavior using `git describe`, but it's
+    # still better than nothing.
+    echo "${rev}" > $out/version.txt
+
     # Link the Python environment in so that:
     # - The setup hook can set IDF_PYTHON_ENV_PATH to it.
     # - In shell derivations, the Python setup hook will add the site-packages

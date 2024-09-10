@@ -56,6 +56,9 @@ NOTE: This doesn't quite work as it should - Python packages won't be adapted fo
 
 See `examples/shell-override-versions.nix` for an example.
 
+### Note about `IDF_VER`
+
+This is a macro describing the version used while building provided by the ESP-IDF toolchain. It is normally generated using `git describe`, but for underlying reasons the build environment can't have access to this git metadata. Fortunately, this repo can emulate this by overriding it to equal the `rev` argument given to `pkgs/esp-idf/default.nix`. This is however not perfect as the output would differ from `git describe` when `rev` is set to a commit hash instead of a tag.
 
 ## Overlay
 This repo contains an overlay in `overlay.nix` containing all the packages defined by this repo. If you clone the repo into `~/.config/nixpkgs/overlays/`, nixpkgs will automatically pick up the overlay and effectively add the packages to your system nixpkgs.
