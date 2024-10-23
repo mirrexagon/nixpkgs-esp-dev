@@ -1,6 +1,9 @@
 # Versions based on
-# https://dl.espressif.com/dl/esp-idf/espidf.constraints.v5.2.txt
-# on 2024-02-20.
+# https://dl.espressif.com/dl/esp-idf/espidf.constraints.v5.3.txt
+# on 2024-10-23.
+#
+# Versions found by running this in a fresh venv:
+# pip install -r esp-idf/tools/requirements/requirements.core.txt --constraint=espidf.constraints.v5.3.txt --dry-run
 
 { stdenv
 , lib
@@ -14,13 +17,13 @@ with pythonPackages;
 rec {
   idf-component-manager = buildPythonPackage rec {
     pname = "idf-component-manager";
-    version = "2.0.2";
+    version = "2.0.4";
     pyproject = true;
 
     src = fetchPypi {
       inherit version;
       pname = "idf_component_manager";
-      sha256 = "sha256-aPpejbLkbm7oExy0QuC6ZqGYBK4OpYWM0zQnnfkhcsU=";
+      sha256 = "sha256-vCyw3nn1r9zkMbqMhXnS9t2kISTqqB56WqlQVq6/6Cs=";
     };
 
     build-system = [
@@ -59,12 +62,12 @@ rec {
 
   esp-coredump = buildPythonPackage rec {
     pname = "esp-coredump";
-    version = "1.11.0";
+    version = "1.12.0";
     pyproject = true;
 
     src = fetchPypi {
       inherit pname version;
-      sha256 = "sha256-xCt9TsTWklD0GcHfI9gHQiVhADZFjmiPQaleE5HdBNc=";
+      sha256 = "sha256-s/JKD9PwcU7OZ3x4U4ScCRILvc1Ors0hkXHiRV+R+tg=";
     };
 
     build-system = [
@@ -86,11 +89,11 @@ rec {
 
   esptool = buildPythonPackage rec {
     pname = "esptool";
-    version = "4.7.0";
+    version = "4.8.1";
 
     src = fetchPypi {
       inherit pname version;
-      sha256 = "sha256-AUVOaeHvNgEhXbg/8ssfx57OZ9JLDl1D1FG0EER8SJM=";
+      sha256 = "sha256-3E7ya2WeGo3LAZFHwOptlJgLNN6Z++CRIceUHIslRTE=";
     };
 
     doCheck = false;
@@ -156,14 +159,14 @@ rec {
 
   esp-idf-monitor = buildPythonPackage rec {
     pname = "esp-idf-monitor";
-    version = "1.4.0";
+    version = "1.5.0";
     pyproject = true;
 
     src = fetchPypi {
       inherit pname version;
-      sha256 = "sha256-CaX/eA16f4LBU6nUwrIrnlRw2s7CGezOlrHD3dpP8ok=";
+      sha256 = "sha256-kGz1uY8KwQ1E/a7YZdZItLou8au5zfHEva/Q/g0aQuQ=";
     };
-    
+
     build-system = [
       setuptools
     ];
@@ -184,11 +187,11 @@ rec {
 
   esp-idf-size = buildPythonPackage rec {
     pname = "esp-idf-size";
-    version = "1.5.0";
+    version = "1.6.0";
 
     src = fetchPypi {
       inherit pname version;
-      sha256 = "sha256-2Xr8nZl6Td/fRz3BjxVy+zTWE5VQDxFiGLuYTq2fZXs=";
+      sha256 = "sha256-sNgfr3iTlGo4cLUZKEqcQ2YEtL/E66bwjATJN1N8Ir8=";
     };
 
     doCheck = false;
@@ -201,16 +204,16 @@ rec {
       homepage = "https://github.com/espressif/esp-idf-size";
     };
   };
-  
+
   esp-idf-nvs-partition-gen = buildPythonPackage rec {
     pname = "esp-idf-nvs-partition-gen";
-    version = "0.1.2";
+    version = "0.1.3";
     pyproject = true;
 
     src = fetchPypi {
       inherit version;
       pname = "esp_idf_nvs_partition_gen";
-      hash = "sha256-HjW5RCKfy83LQgAs0tOW/f9LPVoLwHY1pyb6ar+AxwY=";
+      hash = "sha256-bbD4BoD8Pm/thzwO2wfrMMPWMVsDbNhEvOYm5ERlrP8=";
     };
 
     build-system = [
@@ -230,11 +233,11 @@ rec {
 
   pyclang = buildPythonPackage rec {
     pname = "pyclang";
-    version = "0.4.2";
+    version = "0.5.0";
 
     src = fetchPypi {
       inherit pname version;
-      sha256 = "sha256-vuDZ5yEhyDpCmkXoC+Gr2X5vMK5B46HnktcvBONjxXM=";
+      sha256 = "sha256-stcQaXHkSsXgcz19TUWF27e8O/eWlrvaTKKFk0JeHVQ=";
     };
 
     doCheck = false;
@@ -265,14 +268,14 @@ rec {
 
   esp-idf-panic-decoder = buildPythonPackage rec {
     pname = "esp-idf-panic-decoder";
-    version = "1.1.0";
+    version = "1.2.1";
 
     format = "pyproject";
-    
+
     src = fetchPypi {
       inherit version;
       pname = "esp_idf_panic_decoder";
-      sha256 = "sha256-PR8M7VkxAW08QBU8XvE9FwNwejxmXm9GfdrtgMDCmOw=";
+      sha256 = "sha256-hC8Rje/yMj5qyY8hgErviR4WV3hC0vNCdCQboKXVTYI=";
     };
 
     doCheck = false;
