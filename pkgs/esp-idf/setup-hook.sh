@@ -8,6 +8,11 @@ addIdfEnvVars() {
         export IDF_PYTHON_CHECK_CONSTRAINTS=no
         export IDF_PYTHON_ENV_PATH="$IDF_PATH/python-env"
         addToSearchPath PATH "$IDF_TOOLS_PATH"
+
+        # Extra paths from `export.sh` in the ESP-IDF repo.
+        addToSearchPath PATH "${IDF_PATH}/components/espcoredump"
+        addToSearchPath PATH "${IDF_PATH}/components/partition_table"
+        addToSearchPath PATH "${IDF_PATH}/components/app_update"
     fi
 }
 
