@@ -96,7 +96,11 @@ let
           makeWrapper ${fhsEnv}/bin/${pname}-env $FILE_PATH --add-flags $WRAPPED_FILE_PATH ${lib.strings.concatStringsSep " " exportVarsWrapperArgsList}
         ''
       else
-      ''wrapProgram $FILE_PATH ${lib.strings.concatStringsSep " " exportVarsWrapperArgsList}'';
+      ''
+        if [ -n "${lib.strings.concatStringsSep " " exportVarsWrapperArgsList}" ]; then
+          wrapProgram $FILE_PATH ${lib.strings.concatStringsSep " " exportVarsWrapperArgsList}
+        fi
+      '';
       in ''
         cp -r . $out
 
@@ -122,4 +126,3 @@ let
 
 in
 builtins.listToAttrs (builtins.map (toolSpec: lib.attrsets.nameValuePair toolSpec.name (toolSpecToDerivation toolSpec)) toolSpecList)
-
