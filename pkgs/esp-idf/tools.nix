@@ -91,31 +91,18 @@ let
 
       installPhase = let
         wrapCmd = if (system == "x86_64-linux") || (system == "aarch64-linux") then
-          ''
-            mv $FILE_PATH $FILE_PATH-unwrapped
-
-            # Wrap the binary in the FHS env wrapper.
-            #
-            # Since ESP-IDF 5.2, the compiler binaries are actually a Rust
-            # wrapper[1] around the actual binaries, which use argv[0] to determine
-            # whether the tool is a compiler, and inject some flags if so.
-            # Leaving argv[0] to be "BINARY_NAME-unwrapped" causes this check to
-            # not work. So we use `--inherit-argv0` to make the unwrapped binary
-            # think it is being called with the wrapper filename.
-            #
-            # [1] https://github.com/espressif/esp-toolchain-bin-wrappers
-            #
-            makeWrapper ${fhsEnv}/bin/${pname}-env $FILE_PATH --inherit-argv0 --add-flags $FILE_PATH-unwrapped
-          ''
-        else ""; # Assumed to be macOS.
-        # TODO: Since changing to using `--inherit-argv0`, do we need this
-        # platform distinction anymore?
-        # I assume we can get away without wrapping on macOS because it is not
-        # NixOS and has a FHS filesystem layout, so the binaries just run.
-        # This probably means that we can also get away without wrapping on Nix
-        # on non-NixOS.
-        # This also means that we should probably actually be wrapping in all
-        # cases, so we use dependencies from the Nix store.
+        ''
+          [ ! -d $out/unwrapped_bin ] && mkdir $out/unwrapped_bin
+          WRAPPED_FILE_PATH="$out/unwrapped_bin/$(basename $FILE_PATH)"
+          mv $FILE_PATH $WRAPPED_FILE_PATH
+          makeWrapper ${fhsEnv}/bin/${pname}-env $FILE_PATH --add-flags $WRAPPED_FILE_PATH ${lib.strings.concatStringsSep " " exportVarsWrapperArgsList}
+        ''
+      else
+      ''
+        if [ -n "${lib.strings.concatStringsSep " " exportVarsWrapperArgsList}" ]; then
+          wrapProgram $FILE_PATH ${lib.strings.concatStringsSep " " exportVarsWrapperArgsList}
+        fi
+      '';
       in ''
         cp -r . $out
 
