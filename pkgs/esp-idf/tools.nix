@@ -95,14 +95,15 @@ let
           [ ! -d $out/unwrapped_bin ] && mkdir $out/unwrapped_bin
           WRAPPED_FILE_PATH="$out/unwrapped_bin/$(basename $FILE_PATH)"
           mv $FILE_PATH $WRAPPED_FILE_PATH
-          makeWrapper ${fhsEnv}/bin/${pname}-env $FILE_PATH --add-flags $WRAPPED_FILE_PATH ${lib.strings.concatStringsSep " " exportVarsWrapperArgsList}
+          makeWrapper ${fhsEnv}/bin/${pname}-env $FILE_PATH --add-flags $WRAPPED_FILE_PATH
         ''
-      else
-      ''
-        if [ -n "${lib.strings.concatStringsSep " " exportVarsWrapperArgsList}" ]; then
-          wrapProgram $FILE_PATH ${lib.strings.concatStringsSep " " exportVarsWrapperArgsList}
-        fi
-      '';
+      else "true"; # Assume macOS, do not wrap.
+
+      # macOS doesn't support buildFHSEnv:
+      # https://discourse.nixos.org/t/buildfhsuserenv-not-supported-on-aarch64-darwin/22490/2
+      # But it is not required, since macOS already has a normal FHS filesystem
+      # layout which the macOS tool binaries expect.
+
       in ''
         cp -r . $out
 
