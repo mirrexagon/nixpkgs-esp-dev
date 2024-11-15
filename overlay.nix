@@ -19,6 +19,8 @@ rec {
     ];
   };
 
+  esp-idf-esp32c2 = esp-idf-riscv;
+
   esp-idf-esp32c3 = esp-idf-riscv;
 
   esp-idf-esp32s2 = esp-idf-full.override {
