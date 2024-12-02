@@ -17,6 +17,7 @@
         inherit (pkgs)
           esp-idf-full
           esp-idf-esp32
+          esp-idf-esp32c2
           esp-idf-esp32c3
           esp-idf-esp32s2
           esp-idf-esp32s3
@@ -29,6 +30,7 @@
       devShells = {
         esp-idf-full = import ./shells/esp-idf-full.nix { inherit pkgs; };
         esp32-idf = import ./shells/esp32-idf.nix { inherit pkgs; };
+        esp32c2-idf = import ./shells/esp32c2-idf.nix { inherit pkgs; };
         esp32c3-idf = import ./shells/esp32c3-idf.nix { inherit pkgs; };
         esp32s2-idf = import ./shells/esp32s2-idf.nix { inherit pkgs; };
         esp32s3-idf = import ./shells/esp32s3-idf.nix { inherit pkgs; };
