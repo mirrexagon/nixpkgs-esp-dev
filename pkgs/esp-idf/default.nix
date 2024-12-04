@@ -8,6 +8,7 @@
     "riscv32-esp-elf"
     "esp32ulp-elf"
     "openocd-esp32"
+    "esp-rom-elfs"
   ]
 , stdenv
 , lib
