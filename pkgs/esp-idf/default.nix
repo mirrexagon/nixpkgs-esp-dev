@@ -45,7 +45,7 @@ let
     versionSuffix = "esp-idf-${rev}";
   };
 
-  toolDerivationsToInclude = builtins.map (toolName: allTools."${toolName}") toolsToInclude;
+  tools = lib.getAttrs toolsToInclude allTools;
 
   customPython =
     (python3.withPackages
@@ -113,7 +113,7 @@ stdenv.mkDerivation rec {
     ncurses5
 
     dfu-util
-  ] ++ toolDerivationsToInclude;
+  ] ++ builtins.attrValues tools;
 
   # We are including cmake and ninja so that downstream derivations (eg. shells)
   # get them in their environment, but we don't actually want any of their build
@@ -142,5 +142,7 @@ stdenv.mkDerivation rec {
     ln -s ${customPython}/lib $out/lib
   '';
 
-  passthru.tools = allTools;
+  passthru = {
+    inherit tools allTools;
+  };
 }
