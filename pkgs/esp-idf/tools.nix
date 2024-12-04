@@ -1,5 +1,9 @@
 { toolSpecList # The `tools` entry in `tools/tools.json` in an ESP-IDF checkout.
 , versionSuffix # A string to use in the version of the tool derivations.
+, toolFhsEnvTargetPackages ? { # Extra dependencies for particular tools
+  esp-clang = pkgs: (with pkgs; [ zlib libxml2 ]);
+  openocd-esp32 = pkgs: (with pkgs; [ zlib libusb1 udev ]);
+}
 
 , stdenv
 , system
@@ -15,15 +19,6 @@
 }:
 
 let
-  toolFhsEnvTargetPackages = {
-    xtensa-esp-elf-gdb = pkgs: (with pkgs; [ ]);
-    riscv32-esp-elf-gdb = pkgs: (with pkgs; [ ]);
-    xtensa-esp-elf = pkgs: (with pkgs; [ ]);
-    esp-clang = pkgs: (with pkgs; [ zlib libxml2 ]);
-    riscv32-esp-elf = pkgs: (with pkgs; [ ]);
-    esp32ulp-elf = pkgs: (with pkgs; [ ]);
-    openocd-esp32 = pkgs: (with pkgs; [ zlib libusb1 udev ]);
-  };
   # Map nix system strings to the platforms listed in tools.json
   systemToToolPlatformString = {
     "x86_64-linux" = "linux-amd64";
@@ -35,7 +30,8 @@ let
   toolSpecToDerivation = toolSpec:
     let
       targetPlatform = systemToToolPlatformString.${system};
-      targetVersionSpec = (builtins.elemAt toolSpec.versions 0).${targetPlatform};
+      targetVersionSpecs = builtins.elemAt toolSpec.versions 0;
+      targetVersionSpec = targetVersionSpecs.${targetPlatform} or targetVersionSpecs.any;
     in
     mkToolDerivation {
       pname = toolSpec.name;
@@ -50,7 +46,7 @@ let
       license = { spdxId = toolSpec.license; };
       url = targetVersionSpec.url;
       sha256 = targetVersionSpec.sha256;
-      targetPkgs = toolFhsEnvTargetPackages."${toolSpec.name}";
+      targetPkgs = toolFhsEnvTargetPackages."${toolSpec.name}" or (_: []);
       exportVars = toolSpec.export_vars;
     };
 
@@ -121,6 +117,10 @@ let
 
       meta = with lib; {
         inherit description homepage license;
+      };
+
+      passthru = {
+        inherit exportVars;
       };
     };
 

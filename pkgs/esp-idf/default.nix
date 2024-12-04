@@ -141,4 +141,6 @@ stdenv.mkDerivation rec {
     ln -s ${customPython} $out/python-env
     ln -s ${customPython}/lib $out/lib
   '';
+
+  passthru.tools = allTools;
 }
