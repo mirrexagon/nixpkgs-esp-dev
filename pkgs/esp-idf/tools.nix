@@ -32,22 +32,24 @@ let
       targetPlatform = systemToToolPlatformString.${system};
       targetVersionSpecs = builtins.elemAt toolSpec.versions 0;
       targetVersionSpec = targetVersionSpecs.${targetPlatform} or targetVersionSpecs.any;
+      platformOverrides = builtins.filter (o: lib.elem targetPlatform o.platforms) (toolSpec.platform_overrides or []);
+      mergedToolSpec = lib.foldl' lib.recursiveUpdate toolSpec platformOverrides;
     in
     mkToolDerivation {
-      pname = toolSpec.name;
+      pname = mergedToolSpec.name;
 
       # NOTE: tools.json does not separately specify the versions of tools,
       # so short of extracting the versions from the tarball URLs, we will
       # just put the ESP-IDF version as the tool version.
       version = versionSuffix;
 
-      description = toolSpec.description;
-      homepage = toolSpec.info_url;
-      license = { spdxId = toolSpec.license; };
+      description = mergedToolSpec.description;
+      homepage = mergedToolSpec.info_url;
+      license = { spdxId = mergedToolSpec.license; };
       url = targetVersionSpec.url;
       sha256 = targetVersionSpec.sha256;
-      targetPkgs = toolFhsEnvTargetPackages."${toolSpec.name}" or (_: []);
-      exportVars = toolSpec.export_vars;
+      targetPkgs = toolFhsEnvTargetPackages."${mergedToolSpec.name}" or (_: []);
+      exportVars = mergedToolSpec.export_vars;
     };
 
   mkToolDerivation =
