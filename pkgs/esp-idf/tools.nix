@@ -99,6 +99,8 @@ let
 
       inherit binPaths;
 
+      noDumpEnvVars = true;
+
       installPhase = let
         wrapCmd = if (system == "x86_64-linux") || (system == "aarch64-linux") then
           ''
