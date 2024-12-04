@@ -47,6 +47,8 @@ let
 
   tools = lib.getAttrs toolsToInclude allTools;
 
+  toolEnv = lib.mergeAttrsList (lib.mapAttrsToList (_: tool: tool.exportVars) tools);
+
   customPython =
     (python3.withPackages
       (pythonPackages:
@@ -123,6 +125,9 @@ stdenv.mkDerivation rec {
   dontUseNinjaInstall = true;
   dontUseNinjaCheck = true;
 
+  __structuredAttrs = true;
+  inherit toolEnv;
+
   installPhase = ''
     mkdir -p $out
     cp -rv . $out/
@@ -140,9 +145,13 @@ stdenv.mkDerivation rec {
     #   directory to PYTHONPATH.
     ln -s ${customPython} $out/python-env
     ln -s ${customPython}/lib $out/lib
+
+    for key in "''${!toolEnv[@]}"; do
+      printf "export $key=%q" "''${toolEnv[$key]}"
+    done > $out/.tool-env
   '';
 
   passthru = {
-    inherit tools allTools;
+    inherit tools allTools toolEnv;
   };
 }

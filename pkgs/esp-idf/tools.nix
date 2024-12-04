@@ -116,6 +116,7 @@ let
       '';
       in ''
         cp -r . $out
+        rm $out/.attrs.*
 
         # For setting exported variables (see exportVarsWrapperArgsList).
         TOOL_PATH=$out
