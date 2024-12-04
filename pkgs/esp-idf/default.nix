@@ -8,6 +8,7 @@
     "riscv32-esp-elf"
     "esp32ulp-elf"
     "openocd-esp32"
+    "esp-rom-elfs"
   ]
 , stdenv
 , lib
@@ -45,7 +46,9 @@ let
     versionSuffix = "esp-idf-${rev}";
   };
 
-  toolDerivationsToInclude = builtins.map (toolName: allTools."${toolName}") toolsToInclude;
+  tools = lib.getAttrs toolsToInclude allTools;
+
+  toolEnv = lib.mergeAttrsList (lib.mapAttrsToList (_: tool: tool.exportVars) tools);
 
   customPython =
     (python3.withPackages
@@ -113,7 +116,7 @@ stdenv.mkDerivation rec {
     ncurses5
 
     dfu-util
-  ] ++ toolDerivationsToInclude;
+  ] ++ builtins.attrValues tools;
 
   # We are including cmake and ninja so that downstream derivations (eg. shells)
   # get them in their environment, but we don't actually want any of their build
@@ -122,6 +125,9 @@ stdenv.mkDerivation rec {
   dontUseNinjaBuild = true;
   dontUseNinjaInstall = true;
   dontUseNinjaCheck = true;
+
+  __structuredAttrs = true;
+  inherit toolEnv;
 
   installPhase = ''
     mkdir -p $out
@@ -140,5 +146,13 @@ stdenv.mkDerivation rec {
     #   directory to PYTHONPATH.
     ln -s ${customPython} $out/python-env
     ln -s ${customPython}/lib $out/lib
+
+    for key in "''${!toolEnv[@]}"; do
+      printf "export $key=%q" "''${toolEnv[$key]}"
+    done > $out/.tool-env
   '';
+
+  passthru = {
+    inherit tools allTools toolEnv;
+  };
 }

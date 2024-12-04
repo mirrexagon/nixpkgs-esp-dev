@@ -13,6 +13,8 @@ addIdfEnvVars() {
         addToSearchPath PATH "${IDF_PATH}/components/espcoredump"
         addToSearchPath PATH "${IDF_PATH}/components/partition_table"
         addToSearchPath PATH "${IDF_PATH}/components/app_update"
+
+	[ -e "$1/.tool-env" ] && . "$1/.tool-env"
     fi
 }
 
