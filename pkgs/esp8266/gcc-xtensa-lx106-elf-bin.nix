@@ -30,11 +30,7 @@ stdenv.mkDerivation rec {
   phases = [ "unpackPhase" "installPhase" ];
 
   installPhase = ''
-    mkdir -p $out
-    cp -r * $out
-  '';
-
-  preFixup = ''
+    cp -r . $out
     find $out -type f | while read f; do
       patchelf "$f" > /dev/null 2>&1 || continue
       patchelf --set-interpreter $(cat ${stdenv.cc}/nix-support/dynamic-linker) "$f" || true

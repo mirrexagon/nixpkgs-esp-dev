@@ -48,4 +48,5 @@ rec {
   # ESP8266
   gcc-xtensa-lx106-elf-bin = prev.callPackage ./pkgs/esp8266/gcc-xtensa-lx106-elf-bin.nix { };
   esp8266-rtos-sdk = prev.callPackage ./pkgs/esp8266/esp8266-rtos-sdk/esp8266-rtos-sdk.nix { };
+  esp8266-nonos-sdk = prev.callPackage ./pkgs/esp8266/esp8266-nonos-sdk/esp8266-nonos-sdk.nix { };
 }
