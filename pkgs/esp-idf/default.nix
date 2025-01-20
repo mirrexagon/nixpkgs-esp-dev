@@ -1,5 +1,5 @@
-{ rev ? "v5.3.1"
-, sha256 ? "sha256-hcE4Tr5PTRQjfiRYgvLB1+8sR7KQQ1TnQJqViodGdBw="
+{ rev ? "v5.4"
+, sha256 ? "sha256-9OQ/0DGwgfR3MkRWd6zSe1FD3Ywt4Ugw8J/BFu1Vfw0="
 , toolsToInclude ? [
     "xtensa-esp-elf-gdb"
     "riscv32-esp-elf-gdb"
@@ -73,6 +73,8 @@ let
           esp-idf-size
           esp-idf-panic-decoder
           pyclang
+          psutil
+          rich
           argcomplete
 
           freertos_gdb
