@@ -24,7 +24,8 @@
           esp-idf-esp32c6
           esp-idf-esp32h2
           gcc-xtensa-lx106-elf-bin
-          esp8266-rtos-sdk;
+          esp8266-rtos-sdk
+          esp8266-nonos-sdk;
       };
 
       devShells = {
@@ -37,6 +38,7 @@
         esp32c6-idf = import ./shells/esp32c6-idf.nix { inherit pkgs; };
         esp32h2-idf = import ./shells/esp32h2-idf.nix { inherit pkgs; };
         esp8266-rtos-sdk = import ./shells/esp8266-rtos-sdk.nix { inherit pkgs; };
+        esp8266-nonos-sdk = import ./shells/esp8266-nonos-sdk.nix { inherit pkgs; };
       };
 
       checks = (import ./tests/build-idf-examples.nix { inherit pkgs; }) // (import ./tests/build-esp8266-example.nix { inherit pkgs; });
