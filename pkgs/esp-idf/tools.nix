@@ -1,5 +1,9 @@
 { toolSpecList # The `tools` entry in `tools/tools.json` in an ESP-IDF checkout.
 , versionSuffix # A string to use in the version of the tool derivations.
+, toolFhsEnvTargetPackages ? { # Extra dependencies for particular tools
+  esp-clang = pkgs: (with pkgs; [ zlib libxml2 ]);
+  openocd-esp32 = pkgs: (with pkgs; [ zlib libusb1 udev ]);
+}
 
 , stdenv
 , system
@@ -15,15 +19,6 @@
 }:
 
 let
-  toolFhsEnvTargetPackages = {
-    xtensa-esp-elf-gdb = pkgs: (with pkgs; [ ]);
-    riscv32-esp-elf-gdb = pkgs: (with pkgs; [ ]);
-    xtensa-esp-elf = pkgs: (with pkgs; [ ]);
-    esp-clang = pkgs: (with pkgs; [ zlib libxml2 ]);
-    riscv32-esp-elf = pkgs: (with pkgs; [ ]);
-    esp32ulp-elf = pkgs: (with pkgs; [ ]);
-    openocd-esp32 = pkgs: (with pkgs; [ zlib libusb1 udev ]);
-  };
   # Map nix system strings to the platforms listed in tools.json
   systemToToolPlatformString = {
     "x86_64-linux" = "linux-amd64";
@@ -35,23 +30,31 @@ let
   toolSpecToDerivation = toolSpec:
     let
       targetPlatform = systemToToolPlatformString.${system};
-      targetVersionSpec = (builtins.elemAt toolSpec.versions 0).${targetPlatform};
+      targetVersionSpecs = builtins.elemAt toolSpec.versions 0;
+      targetVersionSpec = targetVersionSpecs.${targetPlatform} or targetVersionSpecs.any;
+      platformOverrides = builtins.filter (o: lib.elem targetPlatform o.platforms) (toolSpec.platform_overrides or []);
+      mergedToolSpec = lib.foldl' lib.recursiveUpdate toolSpec platformOverrides;
     in
     mkToolDerivation {
-      pname = toolSpec.name;
+      pname = mergedToolSpec.name;
 
       # NOTE: tools.json does not separately specify the versions of tools,
       # so short of extracting the versions from the tarball URLs, we will
       # just put the ESP-IDF version as the tool version.
       version = versionSuffix;
 
-      description = toolSpec.description;
-      homepage = toolSpec.info_url;
-      license = { spdxId = toolSpec.license; };
+      description = mergedToolSpec.description;
+      homepage = mergedToolSpec.info_url;
+      license = { spdxId = mergedToolSpec.license; };
       url = targetVersionSpec.url;
       sha256 = targetVersionSpec.sha256;
-      targetPkgs = toolFhsEnvTargetPackages."${toolSpec.name}";
-      exportVars = toolSpec.export_vars;
+      targetPkgs = toolFhsEnvTargetPackages."${mergedToolSpec.name}" or (_: []);
+      exportVars = mergedToolSpec.export_vars;
+      # strip_container_dirs specifies the number of parent directories to remove
+      stripContainerDirs = mergedToolSpec.strip_container_dirs or 0;
+      # export_paths specifies the directories that contain binaries
+      # When there are not binaries to export, a path is specified as [""].
+      exportPaths = builtins.filter (path: path != [""]) (mergedToolSpec.export_paths or []);
     };
 
   mkToolDerivation =
@@ -64,6 +67,8 @@ let
     , sha256
     , targetPkgs
     , exportVars
+    , stripContainerDirs
+    , exportPaths
     }:
 
     let
@@ -73,10 +78,10 @@ let
         runScript = "";
       };
 
-      exportVarsWrapperArgsList = lib.attrsets.mapAttrsToList (name: value: "--set \"${name}\" \"${value}\"") exportVars;
-    in
+      binPaths = map (path: lib.foldl' (a: b: if a == "" then b else "${a}/${b}") "" path) exportPaths;
 
-    stdenv.mkDerivation rec {
+      exportVarsWrapperArgsList = lib.attrsets.mapAttrsToList (name: value: "--set \"${name}\" \"${value}\"") exportVars;
+    in stdenv.mkDerivation (finalAttrs: {
       inherit pname version;
 
       src = fetchurl {
@@ -87,42 +92,58 @@ let
 
       phases = [ "unpackPhase" "installPhase" ];
 
+      setSourceRoot = ''sourceRoot=$(echo ./${lib.strings.replicate stripContainerDirs "*/"})'';
+
+      # Expose binPaths as an array
+      __structuredAttrs = true;
+
+      inherit binPaths;
+
+      noDumpEnvVars = true;
+
       installPhase = let
         wrapCmd = if (system == "x86_64-linux") || (system == "aarch64-linux") then
-        ''
-          [ ! -d $out/unwrapped_bin ] && mkdir $out/unwrapped_bin
-          WRAPPED_FILE_PATH="$out/unwrapped_bin/$(basename $FILE_PATH)"
-          mv $FILE_PATH $WRAPPED_FILE_PATH
-          makeWrapper ${fhsEnv}/bin/${pname}-env $FILE_PATH --add-flags $WRAPPED_FILE_PATH ${lib.strings.concatStringsSep " " exportVarsWrapperArgsList}
+          ''
+          makeWrapper ${fhsEnv}/bin/${pname}-env "$wrapper_file" --add-flags "$file" ${lib.strings.concatStringsSep " " exportVarsWrapperArgsList}
         ''
       else
       ''
         if [ -n "${lib.strings.concatStringsSep " " exportVarsWrapperArgsList}" ]; then
-          wrapProgram $FILE_PATH ${lib.strings.concatStringsSep " " exportVarsWrapperArgsList}
+          makeWrapper "$file" "$wrapper_file" ${lib.strings.concatStringsSep " " exportVarsWrapperArgsList}
+        else
+          ln -s "$file" "$wrapper_file"
         fi
       '';
       in ''
         cp -r . $out
+        rm $out/.attrs.*
 
         # For setting exported variables (see exportVarsWrapperArgsList).
         TOOL_PATH=$out
 
-        for FILE in $(ls $out/bin); do
-          FILE_PATH="$out/bin/$FILE"
-          if [[ -x $FILE_PATH ]]; then
-            ${wrapCmd}
+        for bindir in "''${binPaths[@]}"; do
+          if [ "$bindir" = "bin" ]; then
+            mv $out/bin $out/unwrapped_bin
+            bindir=unwrapped_bin
           fi
+          for file in $out/$bindir/*; do
+            wrapper_file="$out/bin/$(basename "$file")"
+            [ -d "$out/bin" ] || mkdir "$out/bin"
+            ${wrapCmd}
+          done
         done
-
-        # Fix openocd scripts path
-        mkdir $out/openocd-esp32
-        ln -s $out/share $out/openocd-esp32
       '';
 
       meta = with lib; {
         inherit description homepage license;
       };
-    };
+
+      passthru = let
+        inherit (finalAttrs.finalPackage) outPath;
+      in {
+        exportVars = lib.mapAttrs (_: v: lib.replaceStrings ["\${TOOL_PATH}" "$TOOL_PATH"] [outPath outPath] v) exportVars;
+      };
+    });
 
 in
 builtins.listToAttrs (builtins.map (toolSpec: lib.attrsets.nameValuePair toolSpec.name (toolSpecToDerivation toolSpec)) toolSpecList)
