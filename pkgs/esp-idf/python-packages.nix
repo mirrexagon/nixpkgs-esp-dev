@@ -5,11 +5,12 @@
 # Versions found by running this in a fresh venv:
 # pip install -r esp-idf/tools/requirements/requirements.core.txt --constraint=espidf.constraints.v5.3.txt --dry-run
 
-{ stdenv
-, lib
-, fetchPypi
-, fetchFromGitHub
-, pythonPackages
+{
+  stdenv,
+  lib,
+  fetchPypi,
+  fetchFromGitHub,
+  pythonPackages,
 }:
 
 with pythonPackages;
@@ -17,13 +18,13 @@ with pythonPackages;
 rec {
   idf-component-manager = buildPythonPackage rec {
     pname = "idf-component-manager";
-    version = "2.0.4";
+    version = "2.1.2";
     pyproject = true;
 
     src = fetchPypi {
       inherit version;
       pname = "idf_component_manager";
-      sha256 = "sha256-vCyw3nn1r9zkMbqMhXnS9t2kISTqqB56WqlQVq6/6Cs=";
+      sha256 = "sha256-Uc80Rlp4GkjW66e1gkl3pQ10e0Q01Pi2jEWSUpc6sLI=";
     };
 
     build-system = [
@@ -46,6 +47,7 @@ rec {
 
       packaging
       pyyaml
+      ruamel-yaml
       requests
       requests-file
       requests-toolbelt
@@ -291,4 +293,3 @@ rec {
   };
 
 }
-
