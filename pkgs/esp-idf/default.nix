@@ -1,36 +1,20 @@
-{ rev ? "v5.4"
-, sha256 ? "sha256-9OQ/0DGwgfR3MkRWd6zSe1FD3Ywt4Ugw8J/BFu1Vfw0="
+{ rev ? "v5.4", sha256 ? "sha256-9OQ/0DGwgfR3MkRWd6zSe1FD3Ywt4Ugw8J/BFu1Vfw0="
 , toolsToInclude ? [
-    "xtensa-esp-elf-gdb"
-    "riscv32-esp-elf-gdb"
-    "xtensa-esp-elf"
-    "esp-clang"
-    "riscv32-esp-elf"
-    "esp32ulp-elf"
-    "openocd-esp32"
-    "esp-rom-elfs"
-  ]
-, stdenv
-, lib
-, fetchFromGitHub
-, makeWrapper
-, callPackage
+  "xtensa-esp-elf-gdb"
+  "riscv32-esp-elf-gdb"
+  "xtensa-esp-elf"
+  "esp-clang"
+  "riscv32-esp-elf"
+  "esp32ulp-elf"
+  "openocd-esp32"
+  "esp-rom-elfs"
+], stdenv, lib, fetchFromGitHub, makeWrapper, callPackage
 
 , python3
 
-  # Tools for using ESP-IDF.
-, git
-, wget
-, gnumake
-, flex
-, bison
-, gperf
-, pkg-config
-, cmake
-, ninja
-, ncurses5
-, dfu-util
-}:
+# Tools for using ESP-IDF.
+, git, wget, gnumake, flex, bison, gperf, pkg-config, cmake, ninja, ncurses5
+, dfu-util }:
 
 let
   src = fetchFromGitHub {
@@ -42,51 +26,49 @@ let
   };
 
   allTools = callPackage (import ./tools.nix) {
-    toolSpecList = (builtins.fromJSON (builtins.readFile "${src}/tools/tools.json")).tools;
+    toolSpecList =
+      (builtins.fromJSON (builtins.readFile "${src}/tools/tools.json")).tools;
     versionSuffix = "esp-idf-${rev}";
   };
 
   tools = lib.getAttrs toolsToInclude allTools;
 
-  toolEnv = lib.mergeAttrsList (lib.mapAttrsToList (_: tool: tool.exportVars) tools);
+  toolEnv =
+    lib.mergeAttrsList (lib.mapAttrsToList (_: tool: tool.exportVars) tools);
 
-  customPython =
-    (python3.withPackages
-      (pythonPackages:
-        let
-          customPythonPackages = callPackage (import ./python-packages.nix) { inherit pythonPackages; };
-        in
-        with pythonPackages;
-        with customPythonPackages;
-        [
-          # This list is from `tools/requirements/requirements.core.txt` in the
-          # ESP-IDF checkout.
-          setuptools
-          click
-          pyserial
-          cryptography
-          pyparsing
-          pyelftools
-          idf-component-manager
-          esp-coredump
-          esptool
-          esp-idf-kconfig
-          esp-idf-monitor
-          esp-idf-nvs-partition-gen
-          esp-idf-size
-          esp-idf-panic-decoder
-          pyclang
-          psutil
-          rich
-          argcomplete
+  customPython = (python3.withPackages (pythonPackages:
+    let
+      customPythonPackages =
+        callPackage (import ./python-packages.nix) { inherit pythonPackages; };
+    in with pythonPackages;
+    with customPythonPackages; [
+      # This list is from `tools/requirements/requirements.core.txt` in the
+      # ESP-IDF checkout.
+      setuptools
+      click
+      pyserial
+      cryptography
+      pyparsing
+      pyelftools
+      idf-component-manager
+      esp-coredump
+      esptool
+      esp-idf-kconfig
+      esp-idf-monitor
+      esp-idf-nvs-partition-gen
+      esp-idf-size
+      esp-idf-panic-decoder
+      pyclang
+      psutil
+      rich
+      argcomplete
 
-          freertos_gdb
+      freertos_gdb
 
-          # The esp idf vscode extension seems to want pip, too
-          pip
-        ]));
-in
-stdenv.mkDerivation rec {
+      # The esp idf vscode extension seems to want pip, too
+      pip
+    ]));
+in stdenv.mkDerivation rec {
   pname = "esp-idf";
   version = rev;
 
@@ -149,12 +131,18 @@ stdenv.mkDerivation rec {
     ln -s ${customPython} $out/python-env
     ln -s ${customPython}/lib $out/lib
 
+
     for key in "''${!toolEnv[@]}"; do
       printf "export $key=%q" "''${toolEnv[$key]}"
     done > $out/.tool-env
+
+    # make esp-idf cmake git version detection happy
+    cd $out
+    git init .
+    git config user.email "nixbld@localhost"
+    git config user.name "nixbld"
+    git commit --date="1970-01-01 00:00:00" --allow-empty -m "make idf happy"
   '';
 
-  passthru = {
-    inherit tools allTools toolEnv;
-  };
+  passthru = { inherit tools allTools toolEnv; };
 }
