@@ -9,7 +9,7 @@
 , system
 , lib
 , fetchurl
-, buildFHSUserEnv
+, buildFHSEnv
 , makeWrapper
 
   # Dependencies for the various binary tools.
@@ -72,7 +72,7 @@ let
     }:
 
     let
-      fhsEnv = buildFHSUserEnv {
+      fhsEnv = buildFHSEnv {
         name = "${pname}-env";
         inherit targetPkgs;
         runScript = "";
