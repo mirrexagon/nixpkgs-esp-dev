@@ -108,11 +108,7 @@ let
         ''
       else
       ''
-        if [ -n "${lib.strings.concatStringsSep " " exportVarsWrapperArgsList}" ]; then
-          makeWrapper "$file" "$wrapper_file" ${lib.strings.concatStringsSep " " exportVarsWrapperArgsList}
-        else
-          ln -s "$file" "$wrapper_file"
-        fi
+        makeWrapper "$file" "$wrapper_file" ${lib.strings.concatStringsSep " " exportVarsWrapperArgsList}
       '';
       in ''
         cp -r . $out
