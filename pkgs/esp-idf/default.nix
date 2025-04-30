@@ -1,8 +1,9 @@
-{ owner ? "espressif"
-, repo ? "esp-idf"
-, rev ? "v5.4.1"
-, sha256 ? "sha256-5hwoy4QJFZdLApybV0LCxFD2VzM3Y6V7Qv5D3QjI16I="
-, toolsToInclude ? [
+{
+  owner ? "espressif",
+  repo ? "esp-idf",
+  rev ? "v5.4.1",
+  sha256 ? "sha256-5hwoy4QJFZdLApybV0LCxFD2VzM3Y6V7Qv5D3QjI16I=",
+  toolsToInclude ? [
     "xtensa-esp-elf-gdb"
     "riscv32-esp-elf-gdb"
     "xtensa-esp-elf"
@@ -11,32 +12,37 @@
     "esp32ulp-elf"
     "openocd-esp32"
     "esp-rom-elfs"
-  ]
-, stdenv
-, lib
-, fetchFromGitHub
-, makeWrapper
-, callPackage
+  ],
+  stdenv,
+  lib,
+  fetchFromGitHub,
+  makeWrapper,
+  callPackage,
 
-, python3
+  python3,
 
   # Tools for using ESP-IDF.
-, git
-, wget
-, gnumake
-, flex
-, bison
-, gperf
-, pkg-config
-, cmake
-, ninja
-, ncurses5
-, dfu-util
+  git,
+  wget,
+  gnumake,
+  flex,
+  bison,
+  gperf,
+  pkg-config,
+  cmake,
+  ninja,
+  ncurses5,
+  dfu-util,
 }:
 
 let
   src = fetchFromGitHub {
-    inherit owner repo rev sha256;
+    inherit
+      owner
+      repo
+      rev
+      sha256
+      ;
     fetchSubmodules = true;
   };
 
@@ -49,41 +55,43 @@ let
 
   toolEnv = lib.mergeAttrsList (lib.mapAttrsToList (_: tool: tool.exportVars) tools);
 
-  customPython =
-    (python3.withPackages
-      (pythonPackages:
-        let
-          customPythonPackages = callPackage (import ./python-packages.nix) { inherit pythonPackages; };
-        in
-        with pythonPackages;
-        with customPythonPackages;
-        [
-          # This list is from `tools/requirements/requirements.core.txt` in the
-          # ESP-IDF checkout.
-          setuptools
-          click
-          pyserial
-          cryptography
-          pyparsing
-          pyelftools
-          idf-component-manager
-          esp-coredump
-          esptool
-          esp-idf-kconfig
-          esp-idf-monitor
-          esp-idf-nvs-partition-gen
-          esp-idf-size
-          esp-idf-panic-decoder
-          pyclang
-          psutil
-          rich
-          argcomplete
+  customPython = (
+    python3.withPackages (
+      pythonPackages:
+      let
+        customPythonPackages = callPackage (import ./python-packages.nix) { inherit pythonPackages; };
+      in
+      with pythonPackages;
+      with customPythonPackages;
+      [
+        # This list is from `tools/requirements/requirements.core.txt` in the
+        # ESP-IDF checkout.
+        setuptools
+        click
+        pyserial
+        cryptography
+        pyparsing
+        pyelftools
+        idf-component-manager
+        esp-coredump
+        esptool
+        esp-idf-kconfig
+        esp-idf-monitor
+        esp-idf-nvs-partition-gen
+        esp-idf-size
+        esp-idf-panic-decoder
+        pyclang
+        psutil
+        rich
+        argcomplete
 
-          freertos_gdb
+        freertos_gdb
 
-          # The esp idf vscode extension seems to want pip, too
-          pip
-        ]));
+        # The esp idf vscode extension seems to want pip, too
+        pip
+      ]
+    )
+  );
 in
 stdenv.mkDerivation rec {
   pname = "esp-idf";
