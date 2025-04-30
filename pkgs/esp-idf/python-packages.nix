@@ -64,7 +64,7 @@ rec {
 
   esp-coredump = buildPythonPackage rec {
     pname = "esp-coredump";
-    version = "1.12.0";
+    version = "1.12.0"; # TODO: 1.13.1 returns 404 when downloading
     pyproject = true;
 
     src = fetchPypi {
@@ -130,7 +130,7 @@ rec {
 
   esp-idf-kconfig = buildPythonPackage rec {
     pname = "esp-idf-kconfig";
-    version = "2.3.0";
+    version = "2.5.0";
     pyproject = true;
 
     build-system = [
@@ -140,7 +140,7 @@ rec {
     src = fetchPypi {
       inherit version;
       pname = "esp_idf_kconfig";
-      sha256 = "sha256-n+8QM5xe+c8UFl8dTndRTBd4QW7nG1NWiYiEdll06wg=";
+      sha256 = "sha256-G65GbZh1tlOITRJG1bDKfHq247f0/1pzLjyAljHg45I=";
     };
 
     doCheck = false;
@@ -149,7 +149,7 @@ rec {
       kconfiglib
 
       # These packages aren't declared as dependencies but will fail idf.py's
-      # intial depenency check.
+      # initial dependency check.
       intelhex
       rich
     ];
@@ -161,7 +161,7 @@ rec {
 
   esp-idf-monitor = buildPythonPackage rec {
     pname = "esp-idf-monitor";
-    version = "1.5.0";
+    version = "1.5.0"; # TODO: 1.6.2 and 1.6.0 return 404 when downloading
     pyproject = true;
 
     src = fetchPypi {
@@ -189,11 +189,11 @@ rec {
 
   esp-idf-size = buildPythonPackage rec {
     pname = "esp-idf-size";
-    version = "1.6.0";
+    version = "1.6.1";
 
     src = fetchPypi {
       inherit pname version;
-      sha256 = "sha256-sNgfr3iTlGo4cLUZKEqcQ2YEtL/E66bwjATJN1N8Ir8=";
+      sha256 = "sha256-Oki21JiHiS7PzfIj/uQXSjc1KArRKBEDDLRvpQqBI/o=";
     };
 
     doCheck = false;
@@ -209,13 +209,13 @@ rec {
 
   esp-idf-nvs-partition-gen = buildPythonPackage rec {
     pname = "esp-idf-nvs-partition-gen";
-    version = "0.1.3";
+    version = "0.1.6";
     pyproject = true;
 
     src = fetchPypi {
       inherit version;
       pname = "esp_idf_nvs_partition_gen";
-      hash = "sha256-bbD4BoD8Pm/thzwO2wfrMMPWMVsDbNhEvOYm5ERlrP8=";
+      hash = "sha256-511QNGnWJun37fOcH+A923mXM4YDWw/E0kppnNcdiJQ=";
     };
 
     build-system = [
@@ -235,11 +235,11 @@ rec {
 
   pyclang = buildPythonPackage rec {
     pname = "pyclang";
-    version = "0.5.0";
+    version = "0.6.0";
 
     src = fetchPypi {
       inherit pname version;
-      sha256 = "sha256-stcQaXHkSsXgcz19TUWF27e8O/eWlrvaTKKFk0JeHVQ=";
+      sha256 = "sha256-G+Y24AiTOpjLg+eQGAT/CTCK0/vomqjNZloXTmWqRQM=";
     };
 
     doCheck = false;
@@ -270,14 +270,14 @@ rec {
 
   esp-idf-panic-decoder = buildPythonPackage rec {
     pname = "esp-idf-panic-decoder";
-    version = "1.2.1";
+    version = "1.3.0";
 
     format = "pyproject";
 
     src = fetchPypi {
       inherit version;
       pname = "esp_idf_panic_decoder";
-      sha256 = "sha256-hC8Rje/yMj5qyY8hgErviR4WV3hC0vNCdCQboKXVTYI=";
+      sha256 = "sha256-INLVdgoLNVl0Mik9MyVCXoQRt34eVnvvaiBO0KuSSTI=";
     };
 
     doCheck = false;
@@ -291,5 +291,4 @@ rec {
       homepage = "https://github.com/espressif/esp-idf-panic-decoder";
     };
   };
-
 }
