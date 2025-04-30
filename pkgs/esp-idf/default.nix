@@ -1,4 +1,6 @@
-{ rev ? "v5.4"
+{ owner ? "espressif"
+, repo ? "esp-idf"
+, rev ? "v5.4"
 , sha256 ? "sha256-9OQ/0DGwgfR3MkRWd6zSe1FD3Ywt4Ugw8J/BFu1Vfw0="
 , toolsToInclude ? [
     "xtensa-esp-elf-gdb"
@@ -34,10 +36,7 @@
 
 let
   src = fetchFromGitHub {
-    owner = "espressif";
-    repo = "esp-idf";
-    rev = rev;
-    sha256 = sha256;
+    inherit owner repo rev sha256;
     fetchSubmodules = true;
   };
 
