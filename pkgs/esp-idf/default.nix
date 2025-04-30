@@ -151,6 +151,13 @@ stdenv.mkDerivation rec {
     for key in "''${!toolEnv[@]}"; do
       printf "export $key=%q" "''${toolEnv[$key]}"
     done > $out/.tool-env
+
+    # make esp-idf cmake git version detection happy
+    cd $out
+    git init .
+    git config user.email "nixbld@localhost"
+    git config user.name "nixbld"
+    git commit --date="1970-01-01 00:00:00" --allow-empty -m "make idf happy"
   '';
 
   passthru = {
