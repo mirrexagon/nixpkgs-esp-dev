@@ -1,7 +1,7 @@
 { owner ? "espressif"
 , repo ? "esp-idf"
-, rev ? "v5.4"
-, sha256 ? "sha256-9OQ/0DGwgfR3MkRWd6zSe1FD3Ywt4Ugw8J/BFu1Vfw0="
+, rev ? "v5.4.1"
+, sha256 ? "sha256-5hwoy4QJFZdLApybV0LCxFD2VzM3Y6V7Qv5D3QjI16I="
 , toolsToInclude ? [
     "xtensa-esp-elf-gdb"
     "riscv32-esp-elf-gdb"
