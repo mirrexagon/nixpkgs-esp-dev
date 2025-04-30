@@ -251,11 +251,11 @@ rec {
 
   freertos_gdb = buildPythonPackage rec {
     pname = "freertos-gdb";
-    version = "1.0.3";
+    version = "1.0.4";
 
     src = fetchPypi {
       inherit pname version;
-      sha256 = "sha256-5rkB01OdbD5Z4vA6dbqhWp5pGwqI1IlE4IE1dSdT1QE=";
+      sha256 = "sha256-lH/dlTX2PuZ89rX5zzpedHkqHvdVy+h6BzJ8rVFmkb8=";
     };
 
     doCheck = false;
