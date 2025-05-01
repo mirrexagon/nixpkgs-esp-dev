@@ -1,2 +1,6 @@
-# Returns nixpkgs with the overlay from this repo applied.
-import <nixpkgs> { overlays = [ (import ./overlay.nix) ]; }
+{
+  pkgs ? import <nixpkgs> { },
+  lib ? pkgs.lib,
+}:
+
+lib.makeScope pkgs.newScope (self: import ./overlay.nix self self)
