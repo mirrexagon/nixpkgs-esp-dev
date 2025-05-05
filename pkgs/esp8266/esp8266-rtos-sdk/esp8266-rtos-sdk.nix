@@ -1,6 +1,7 @@
 {
   rev ? "v3.4",
   sha256 ? "sha256-WhGVo4NDOkOlu9tsLFhOcZYthmVfxquOibZ+nGetbuo=",
+  extraPythonPackages ? (pythonPackages: [ ]),
   stdenv,
   lib,
   fetchFromGitHub,
@@ -28,7 +29,9 @@
 let
   customPython = (
     python3.withPackages (
-      pythonPackages: with pythonPackages; [
+      pythonPackages:
+      with pythonPackages;
+      [
         # This list is from `requirements.txt` in the ESP8266_RTOS_SDK
         # checkout.
         setuptools
@@ -49,6 +52,7 @@ let
 
         pyelftools
       ]
+      ++ (extraPythonPackages pythonPackages)
     )
   );
 in
