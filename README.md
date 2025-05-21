@@ -1,5 +1,5 @@
 # nixpkgs-esp-dev
-ESP8266 and ESP32(-C2, -C3, -S2, -S3, -C6, -H2) packages and development environments for Nix.
+ESP8266 and ESP32(-C2, -C3, -C5, -S2, -S3, -C6, -H2) packages and development environments for Nix.
 
 This repo contains derivations for ESP-IDF, and most of the toolchains and tools it depends on (compilers for all supported targets, custom OpenOCD for Espressif chips, etc.).
 
@@ -23,6 +23,7 @@ The list of available shells (to go after the `#` in the command) are:
 - `esp32-idf`: Includes toolchain for the ESP32.
 - `esp32c2-idf`: Includes toolchain for the ESP32-C2.
 - `esp32c3-idf`: Includes toolchain for the ESP32-C3.
+- `esp32c5-idf`: Includes toolchain for the ESP32-C5.
 - `esp32s2-idf`: Includes toolchain for the ESP32-S2.
 - `esp32s3-idf`: Includes toolchain for the ESP32-S3.
 - `esp32c6-idf`: Includes toolchain for the ESP32-C6.
@@ -38,6 +39,7 @@ If you're not using Nix 2.4+ or prefer not to need to enable flakes, you can clo
 - `nix-shell shells/esp32-idf.nix`
 - `nix-shell shells/esp32c2-idf.nix`
 - `nix-shell shells/esp32c3-idf.nix`
+- `nix-shell shells/esp32c5-idf.nix`
 - `nix-shell shells/esp32s2-idf.nix`
 - `nix-shell shells/esp32s3-idf.nix`
 - `nix-shell shells/esp32c6-idf.nix`

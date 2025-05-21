@@ -25,6 +25,7 @@ final: prev: rec {
   esp-idf-esp32s3 = esp-idf-xtensa;
   esp-idf-esp32c2 = esp-idf-riscv;
   esp-idf-esp32c3 = esp-idf-riscv;
+  esp-idf-esp32c5 = esp-idf-riscv;
   esp-idf-esp32c6 = esp-idf-riscv;
   esp-idf-esp32h2 = esp-idf-riscv;
   esp-idf-esp32p4 = esp-idf-riscv;
