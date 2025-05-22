@@ -4,6 +4,6 @@ pkgs.mkShell {
   name = "esp-idf-esp32c5-shell";
 
   buildInputs = with pkgs; [
-    esp-idf-esp32c5
+    ( esp-idf-esp32c5.override { rev = "d930a386dae"; } )
   ];
 }
