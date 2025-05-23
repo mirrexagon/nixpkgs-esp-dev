@@ -165,6 +165,19 @@ stdenv.mkDerivation rec {
     git init .
     git config user.email "nixbld@localhost"
     git config user.name "nixbld"
+    # Fix Ownership/Permissions Issues with esp-idf repo
+    #   - This package is typically built by a different user than the "end user"
+    #   - The esp-idf build tools execute git on its own working tree, which requires end user access
+    #   - It is not feasible to change ownership or permissions of nix store content, and we don't want to just run as root, so
+    #     the solution it to explicitly configure the git client to trust the esp-idf directory in the nix store
+    #   - Here we add a system-level git configuration file in the package derivation.
+    #   - Git config file location is referred to by the GIT_CONFIG_GLOBAL var exported by shell hook at runtime
+    #   - User- and repo-level git configs are not masked, all are read and merged per https://git-scm.com/docs/git-config#FILES
+    mkdir -p $out/etc
+    cat > $out/etc/gitconfig << EOF
+[safe]
+	directory = $out
+EOF
     git commit --date="1970-01-01 00:00:00" --allow-empty -m "make idf happy"
   '';
 
