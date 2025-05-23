@@ -8,7 +8,7 @@ pkgs.mkShell {
 
   shellHook = ''
     # Fix git dubious ownership for ESP-IDF
-    # When you use "${d}" in a Nix string, it automatically converts derivation (d, the build recipe) 
+    # When you use $${d} in a Nix string, it automatically converts derivation (d, the build recipe) 
     # into its output path (where it gets installed in /nix/store/).
     git config --global --add safe.directory "${esp-idf-custom}" 2>/dev/null || true
   '';
