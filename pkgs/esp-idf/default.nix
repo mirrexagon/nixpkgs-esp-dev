@@ -80,6 +80,7 @@ let
         esp-idf-nvs-partition-gen
         esp-idf-size
         esp-idf-panic-decoder
+        esp-idf-diag
         pyclang
         psutil
         rich

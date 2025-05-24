@@ -9,6 +9,7 @@
   stdenv,
   lib,
   fetchPypi,
+  fetchurl,
   fetchFromGitHub,
   pythonPackages,
 }:
@@ -125,6 +126,34 @@ rec {
 
     meta = {
       homepage = "https://github.com/espressif/esptool";
+    };
+  };
+
+  esp-idf-diag = buildPythonPackage rec {
+    pname = "esp-idf-diag";
+    version = "0.1.1";
+    pyproject = true;
+
+    src = fetchurl {
+      url = "https://files.pythonhosted.org/packages/5f/d9/b9817b5c3859a5434a1d4d734c39fc6556913e7e771f65971df9a7d092b6/esp_idf_diag-0.1.1.tar.gz";
+      sha256 = "4ba922921e957ac6286fc0c0070909eba56584ef0abed2f4fde0fb08c63ff227";
+    };
+
+    build-system = [
+      setuptools
+    ];
+
+    doCheck = false;
+
+    propagatedBuildInputs = [
+      pyyaml
+      click
+      rich
+    ];
+
+    meta = {
+      homepage = "https://github.com/espressif/esp-idf-diag";
+      description = "Diagnostic tool for ESP-IDF";
     };
   };
 
