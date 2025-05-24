@@ -6,4 +6,8 @@ pkgs.mkShell {
   buildInputs = with pkgs; [
     esp-idf-esp32c5
   ];
+  
+  shellHook = ''
+    export IDF_PYTHON_ENV_PATH="$(python -c 'import sys; print(sys.prefix)' 2>/dev/null || echo "$IDF_PYTHON_ENV_PATH")"
+  '';
 }

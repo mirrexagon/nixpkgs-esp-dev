@@ -2,7 +2,7 @@
   owner ? "espressif",
   repo ? "esp-idf",
   rev ? "v5.4.1",
-  sha256 ? "sha256-5hwoy4QJFZdLApybV0LCxFD2VzM3Y6V7Qv5D3QjI16I=",
+  sha256 ? "sha256-qm8cMPSyZIP+hPsV8A44x3I3gF7XK8fzGngd85RcgYc=",
   toolsToInclude ? [
     "xtensa-esp-elf-gdb"
     "riscv32-esp-elf-gdb"
@@ -36,15 +36,12 @@
 }:
 
 let
-  src = fetchFromGitHub {
-    inherit
-      owner
-      repo
-      rev
-      sha256
-      ;
-    fetchSubmodules = true;
-  };
+src = fetchFromGitHub {
+  inherit owner repo rev;
+  fetchSubmodules = true;
+  hash = "sha256-5hwoy4QJFZdLApybV0LCxFD2VzM3Y6V7Qv5D3QjI16I=";
+  # tags are fetched explicitly and imperatively in installPhase bc nix fetchers don't support this.
+};
 
   allTools = callPackage (import ./tools.nix) {
     toolSpecList = (builtins.fromJSON (builtins.readFile "${src}/tools/tools.json")).tools;
@@ -139,48 +136,47 @@ stdenv.mkDerivation rec {
   __structuredAttrs = true;
   inherit toolEnv;
 
-  installPhase = ''
-    mkdir -p $out
-    cp -rv . $out/
+installPhase = ''
+  mkdir -p $out
+  cp -rv . $out/
 
-    # Override the version read by ESP IDF (as it can't be read in the usual way
-    # since we don't include the .git directory with that metadata).
-    # NOTE: This doesn't perfectly replicate the way the commit name is
-    # formatted with the standard behavior using `git describe`, but it's
-    # still better than nothing.
-    echo "${rev}" > $out/version.txt
+  # Link the Python environment in so that:
+  # - The setup hook can set IDF_PYTHON_ENV_PATH to it.
+  # - In shell derivations, the Python setup hook will add the site-packages
+  #   directory to PYTHONPATH.
+  ln -s ${customPython} $out/python-env
+  ln -s ${customPython}/lib $out/lib
 
-    # Link the Python environment in so that:
-    # - The setup hook can set IDF_PYTHON_ENV_PATH to it.
-    # - In shell derivations, the Python setup hook will add the site-packages
-    #   directory to PYTHONPATH.
-    ln -s ${customPython} $out/python-env
-    ln -s ${customPython}/lib $out/lib
+  for key in "''${!toolEnv[@]}"; do
+    printf "export $key=%q" "''${toolEnv[$key]}"
+  done > $out/.tool-env
 
-    for key in "''${!toolEnv[@]}"; do
-      printf "export $key=%q" "''${toolEnv[$key]}"
-    done > $out/.tool-env
-
-    # make esp-idf cmake git version detection happy
-    cd $out
-    git init .
-    git config user.email "nixbld@localhost"
-    git config user.name "nixbld"
-    # Fix Ownership/Permissions Issues with esp-idf repo
-    #   - This package is typically built by a different user than the "end user"
-    #   - The esp-idf build tools execute git on its own working tree, which requires end user access
-    #   - It is not feasible to change ownership or permissions of nix store content, and we don't want to just run as root, so
-    #     the solution it to explicitly configure the git client to trust the esp-idf directory in the nix store
-    #   - Here we add a system-level git configuration file in the package derivation.
-    #   - Git config file location is referred to by the GIT_CONFIG_GLOBAL var exported by shell hook at runtime
-    #   - User- and repo-level git configs are not masked, all are read and merged per https://git-scm.com/docs/git-config#FILES
-    mkdir -p $out/etc
-    cat > $out/etc/gitconfig << EOF
+  # make esp-idf cmake git version detection happy
+  cd $out
+  git init .
+  git config user.email "nixbld@localhost"
+  git config user.name "nixbld"
+  git remote add origin "https://github.com/${owner}/${repo}.git"
+  
+  # TODO: we are moving this to runtime, at shell activation time ina shell hook.
+  #git tag "${rev}" HEAD              # create and explicit version tag so git describe works
+  #git fetch origin --tags --depth=1  # fetch tags so git describe works
+  
+  # Fix Ownership/Permissions Issues with esp-idf repo
+  #   - This package is typically built by a different user than the "end user"
+  #   - The esp-idf build tools execute git on its own working tree, which requires end user access
+  #   - It is not feasible to change ownership or permissions of nix store content, and we don't want to just run as root, so
+  #     the solution it to explicitly configure the git client to trust the esp-idf directory in the nix store
+  #   - Here we add a system-level git configuration file in the package derivation.
+  #   - Git config file location is referred to by the GIT_CONFIG_GLOBAL var exported by shell hook at runtime
+  #   - User- and repo-level git configs are not masked, all are read and merged per https://git-scm.com/docs/git-config#FILES
+  mkdir -p $out/etc
+  cat > $out/etc/gitconfig << EOF
 [safe]
 	directory = $out
 EOF
-    git commit --date="1970-01-01 00:00:00" --allow-empty -m "make idf happy"
-  '';
+  git commit --date="1970-01-01 00:00:00" --allow-empty -m "make idf happy"
+'';
 
   passthru = {
     inherit tools allTools toolEnv;
