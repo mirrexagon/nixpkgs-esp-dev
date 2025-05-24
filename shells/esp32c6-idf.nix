@@ -1,13 +1,3 @@
 { pkgs ? import ../default.nix }:
 
-pkgs.mkShell {
-  name = "esp-idf-esp32c6-shell";
-
-  buildInputs = with pkgs; [
-    esp-idf-esp32c6
-  ];
-
-  shellHook = ''
-    export IDF_PYTHON_ENV_PATH="$(python -c 'import sys; print(sys.prefix)' 2>/dev/null || echo "$IDF_PYTHON_ENV_PATH")"
-  '';
-}
+import ./esp-idf-common.nix { inherit pkgs; esp-idf-package = pkgs.esp-idf-esp32c6; }
