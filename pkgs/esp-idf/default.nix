@@ -15,7 +15,7 @@
   ],
   stdenv,
   lib,
-  fetchFromGitHub,
+  fetchgit,
   makeWrapper,
   callPackage,
 
@@ -36,11 +36,12 @@
 }:
 
 let
-src = fetchFromGitHub {
-  inherit owner repo rev;
+src = fetchgit {
+  url = "https://github.com/${owner}/${repo}.git";
+  inherit rev;
   fetchSubmodules = true;
-  hash = "sha256-5hwoy4QJFZdLApybV0LCxFD2VzM3Y6V7Qv5D3QjI16I=";
-  # tags are fetched explicitly and imperatively in installPhase bc nix fetchers don't support this.
+  fetchTags = true;
+  hash = "sha256-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=";
 };
 
   allTools = callPackage (import ./tools.nix) {
@@ -158,9 +159,8 @@ installPhase = ''
   git config user.name "nixbld"
   git remote add origin "https://github.com/${owner}/${repo}.git"
   
-  # TODO: we are moving this to runtime, at shell activation time ina shell hook.
-  #git tag "${rev}" HEAD              # create and explicit version tag so git describe works
-  #git fetch origin --tags --depth=1  # fetch tags so git describe works
+  # Create a version tag so git describe works (tags are now fetched by fetchgit)
+  git tag "${rev}" HEAD
   
   # Fix Ownership/Permissions Issues with esp-idf repo
   #   - This package is typically built by a different user than the "end user"
