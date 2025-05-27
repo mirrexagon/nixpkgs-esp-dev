@@ -41,7 +41,7 @@ src = fetchgit {
   inherit rev;
   fetchSubmodules = true;
   fetchTags = true;
-  hash = "sha256-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=";
+  hash = "sha256-0YwjUeL1DkwSvLRTRp03UcnY+9IHR1DbLyLHhBP7wHs=";
 };
 
   allTools = callPackage (import ./tools.nix) {
