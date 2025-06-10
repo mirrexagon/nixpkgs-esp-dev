@@ -1,21 +1,34 @@
-{ toolSpecList # The `tools` entry in `tools/tools.json` in an ESP-IDF checkout.
-, versionSuffix # A string to use in the version of the tool derivations.
-, toolFhsEnvTargetPackages ? { # Extra dependencies for particular tools
-  esp-clang = pkgs: (with pkgs; [ zlib libxml2 ]);
-  openocd-esp32 = pkgs: (with pkgs; [ zlib libusb1 udev ]);
-}
+{
+  toolSpecList, # The `tools` entry in `tools/tools.json` in an ESP-IDF checkout.
+  versionSuffix, # A string to use in the version of the tool derivations.
+  toolFhsEnvTargetPackages ? {
+    # Extra dependencies for particular tools
+    esp-clang =
+      pkgs:
+      (with pkgs; [
+        zlib
+        libxml2
+      ]);
+    openocd-esp32 =
+      pkgs:
+      (with pkgs; [
+        zlib
+        libusb1
+        udev
+      ]);
+  },
 
-, stdenv
-, system
-, lib
-, fetchurl
-, buildFHSEnv
-, makeWrapper
+  stdenv,
+  system,
+  lib,
+  fetchurl,
+  buildFHSEnv,
+  makeWrapper,
 
   # Dependencies for the various binary tools.
-, zlib
-, libusb1
-, udev
+  zlib,
+  libusb1,
+  udev,
 }:
 
 let
@@ -27,12 +40,15 @@ let
     "aarch64-darwin" = "macos-arm64";
   };
 
-  toolSpecToDerivation = toolSpec:
+  toolSpecToDerivation =
+    toolSpec:
     let
       targetPlatform = systemToToolPlatformString.${system};
       targetVersionSpecs = builtins.elemAt toolSpec.versions 0;
       targetVersionSpec = targetVersionSpecs.${targetPlatform} or targetVersionSpecs.any;
-      platformOverrides = builtins.filter (o: lib.elem targetPlatform o.platforms) (toolSpec.platform_overrides or []);
+      platformOverrides = builtins.filter (o: lib.elem targetPlatform o.platforms) (
+        toolSpec.platform_overrides or [ ]
+      );
       mergedToolSpec = lib.foldl' lib.recursiveUpdate toolSpec platformOverrides;
     in
     mkToolDerivation {
@@ -45,30 +61,33 @@ let
 
       description = mergedToolSpec.description;
       homepage = mergedToolSpec.info_url;
-      license = { spdxId = mergedToolSpec.license; };
+      license = {
+        spdxId = mergedToolSpec.license;
+      };
       url = targetVersionSpec.url;
       sha256 = targetVersionSpec.sha256;
-      targetPkgs = toolFhsEnvTargetPackages."${mergedToolSpec.name}" or (_: []);
+      targetPkgs = toolFhsEnvTargetPackages."${mergedToolSpec.name}" or (_: [ ]);
       exportVars = mergedToolSpec.export_vars;
       # strip_container_dirs specifies the number of parent directories to remove
       stripContainerDirs = mergedToolSpec.strip_container_dirs or 0;
       # export_paths specifies the directories that contain binaries
       # When there are not binaries to export, a path is specified as [""].
-      exportPaths = builtins.filter (path: path != [""]) (mergedToolSpec.export_paths or []);
+      exportPaths = builtins.filter (path: path != [ "" ]) (mergedToolSpec.export_paths or [ ]);
     };
 
   mkToolDerivation =
-    { pname
-    , version
-    , description
-    , homepage
-    , license
-    , url
-    , sha256
-    , targetPkgs
-    , exportVars
-    , stripContainerDirs
-    , exportPaths
+    {
+      pname,
+      version,
+      description,
+      homepage,
+      license,
+      url,
+      sha256,
+      targetPkgs,
+      exportVars,
+      stripContainerDirs,
+      exportPaths,
     }:
 
     let
@@ -80,17 +99,21 @@ let
 
       binPaths = map (path: lib.foldl' (a: b: if a == "" then b else "${a}/${b}") "" path) exportPaths;
 
-      exportVarsWrapperArgsList = lib.attrsets.mapAttrsToList (name: value: "--set \"${name}\" \"${value}\"") exportVars;
-    in stdenv.mkDerivation (finalAttrs: {
+      exportVarsWrapperArgsList = lib.attrsets.mapAttrsToList (
+        name: value: "--set \"${name}\" \"${value}\""
+      ) exportVars;
+    in
+    stdenv.mkDerivation (finalAttrs: {
       inherit pname version;
 
-      src = fetchurl {
-        inherit url sha256;
-      };
+      src = fetchurl { inherit url sha256; };
 
       buildInputs = [ makeWrapper ];
 
-      phases = [ "unpackPhase" "installPhase" ];
+      phases = [
+        "unpackPhase"
+        "installPhase"
+      ];
 
       setSourceRoot = ''sourceRoot=$(echo ./${lib.strings.replicate stripContainerDirs "*/"})'';
 
@@ -101,45 +124,56 @@ let
 
       noDumpEnvVars = true;
 
-      installPhase = let
-        wrapCmd = if (system == "x86_64-linux") || (system == "aarch64-linux") then
-          ''
-          makeWrapper ${fhsEnv}/bin/${pname}-env "$wrapper_file" --add-flags "$file" ${lib.strings.concatStringsSep " " exportVarsWrapperArgsList}
+      installPhase =
+        let
+          wrapCmd =
+            if (system == "x86_64-linux") || (system == "aarch64-linux") then
+              ''
+                makeWrapper ${fhsEnv}/bin/${pname}-env "$wrapper_file" --add-flags "$file" ${lib.strings.concatStringsSep " " exportVarsWrapperArgsList}
+              ''
+            else
+              ''
+                makeWrapper "$file" "$wrapper_file" ${lib.strings.concatStringsSep " " exportVarsWrapperArgsList}
+              '';
+        in
         ''
-      else
-      ''
-        makeWrapper "$file" "$wrapper_file" ${lib.strings.concatStringsSep " " exportVarsWrapperArgsList}
-      '';
-      in ''
-        cp -r . $out
-        rm $out/.attrs.*
+          cp -r . $out
+          rm $out/.attrs.*
 
-        # For setting exported variables (see exportVarsWrapperArgsList).
-        TOOL_PATH=$out
+          # For setting exported variables (see exportVarsWrapperArgsList).
+          TOOL_PATH=$out
 
-        for bindir in "''${binPaths[@]}"; do
-          if [ "$bindir" = "bin" ]; then
-            mv $out/bin $out/unwrapped_bin
-            bindir=unwrapped_bin
-          fi
-          for file in $out/$bindir/*; do
-            wrapper_file="$out/bin/$(basename "$file")"
-            [ -d "$out/bin" ] || mkdir "$out/bin"
-            ${wrapCmd}
+          for bindir in "''${binPaths[@]}"; do
+            if [ "$bindir" = "bin" ]; then
+              mv $out/bin $out/unwrapped_bin
+              bindir=unwrapped_bin
+            fi
+            for file in $out/$bindir/*; do
+              wrapper_file="$out/bin/$(basename "$file")"
+              [ -d "$out/bin" ] || mkdir "$out/bin"
+              ${wrapCmd}
+            done
           done
-        done
-      '';
+        '';
 
       meta = with lib; {
         inherit description homepage license;
       };
 
-      passthru = let
-        inherit (finalAttrs.finalPackage) outPath;
-      in {
-        exportVars = lib.mapAttrs (_: v: lib.replaceStrings ["\${TOOL_PATH}" "$TOOL_PATH"] [outPath outPath] v) exportVars;
-      };
+      passthru =
+        let
+          inherit (finalAttrs.finalPackage) outPath;
+        in
+        {
+          exportVars = lib.mapAttrs (
+            _: v: lib.replaceStrings [ "\${TOOL_PATH}" "$TOOL_PATH" ] [ outPath outPath ] v
+          ) exportVars;
+        };
     });
 
 in
-builtins.listToAttrs (builtins.map (toolSpec: lib.attrsets.nameValuePair toolSpec.name (toolSpecToDerivation toolSpec)) toolSpecList)
+builtins.listToAttrs (
+  builtins.map (
+    toolSpec: lib.attrsets.nameValuePair toolSpec.name (toolSpecToDerivation toolSpec)
+  ) toolSpecList
+)

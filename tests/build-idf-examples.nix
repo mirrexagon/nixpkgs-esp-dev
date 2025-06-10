@@ -12,9 +12,7 @@ let
     (pkgs.stdenv.mkDerivation {
       name = "test-build-${target}-${builtins.replaceStrings [ "/" ] [ "-" ] example}-${suffix}";
 
-      buildInputs = [
-        esp-idf
-      ];
+      buildInputs = [ esp-idf ];
 
       phases = [ "buildPhase" ];
 

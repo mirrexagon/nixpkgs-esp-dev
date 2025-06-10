@@ -168,7 +168,5 @@ stdenv.mkDerivation rec {
     git commit --date="1970-01-01 00:00:00" --allow-empty -m "make idf happy"
   '';
 
-  passthru = {
-    inherit tools allTools toolEnv;
-  };
+  passthru = { inherit tools allTools toolEnv; };
 }

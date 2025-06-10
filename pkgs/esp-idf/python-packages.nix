@@ -27,9 +27,7 @@ rec {
       sha256 = "sha256-Uc80Rlp4GkjW66e1gkl3pQ10e0Q01Pi2jEWSUpc6sLI=";
     };
 
-    build-system = [
-      setuptools
-    ];
+    build-system = [ setuptools ];
     doCheck = false;
 
     propagatedBuildInputs = [
@@ -72,9 +70,7 @@ rec {
       sha256 = "sha256-s/JKD9PwcU7OZ3x4U4ScCRILvc1Ors0hkXHiRV+R+tg=";
     };
 
-    build-system = [
-      setuptools
-    ];
+    build-system = [ setuptools ];
 
     doCheck = false;
 
@@ -133,9 +129,7 @@ rec {
     version = "2.5.0";
     pyproject = true;
 
-    build-system = [
-      setuptools
-    ];
+    build-system = [ setuptools ];
 
     src = fetchPypi {
       inherit version;
@@ -169,9 +163,7 @@ rec {
       sha256 = "sha256-kGz1uY8KwQ1E/a7YZdZItLou8au5zfHEva/Q/g0aQuQ=";
     };
 
-    build-system = [
-      setuptools
-    ];
+    build-system = [ setuptools ];
 
     doCheck = false;
 
@@ -198,9 +190,7 @@ rec {
 
     doCheck = false;
 
-    propagatedBuildInputs = [
-      pyyaml
-    ];
+    propagatedBuildInputs = [ pyyaml ];
 
     meta = {
       homepage = "https://github.com/espressif/esp-idf-size";
@@ -218,13 +208,9 @@ rec {
       hash = "sha256-511QNGnWJun37fOcH+A923mXM4YDWw/E0kppnNcdiJQ=";
     };
 
-    build-system = [
-      setuptools
-    ];
+    build-system = [ setuptools ];
 
-    dependencies = [
-      cryptography
-    ];
+    dependencies = [ cryptography ];
 
     pythonImportsCheck = [ "esp_idf_nvs_partition_gen" ];
 
@@ -260,8 +246,7 @@ rec {
 
     doCheck = false;
 
-    propagatedBuildInputs = [
-    ];
+    propagatedBuildInputs = [ ];
 
     meta = {
       homepage = "https://github.com/espressif/freertos-gdb";
