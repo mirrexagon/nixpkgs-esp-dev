@@ -13,7 +13,5 @@ in
 pkgs.mkShell {
   name = "esp-project";
 
-  buildInputs = with pkgs; [
-    esp-idf-full
-  ];
+  buildInputs = with pkgs; [ esp-idf-full ];
 }

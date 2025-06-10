@@ -24,10 +24,13 @@ stdenv.mkDerivation rec {
         x86_64-darwin = "sha256-eCPF/fPOorWIzwxb2WJ3SrYKMLjZwZrgBWoO82l1N9s=";
         i686-linux = "sha256-yNzn6OtYwf304DunTrgJToA6C1uK1qnVcSFvYOtyyzY=";
       }
-        .${stdenv.hostPlatform.system} or (throw "Unsupported system: ${stdenv.hostPlatform.system}");
+      .${stdenv.hostPlatform.system} or (throw "Unsupported system: ${stdenv.hostPlatform.system}");
   };
 
-  phases = [ "unpackPhase" "installPhase" ];
+  phases = [
+    "unpackPhase"
+    "installPhase"
+  ];
 
   installPhase = ''
     cp -r . $out

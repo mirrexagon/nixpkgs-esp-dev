@@ -5,7 +5,5 @@
 pkgs.mkShell {
   name = "esp-idf-esp32p4-shell";
 
-  buildInputs = with pkgs; [
-    esp-idf-esp32p4
-  ];
+  buildInputs = with pkgs; [ esp-idf-esp32p4 ];
 }

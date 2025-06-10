@@ -66,9 +66,7 @@
         "--enable-slirp"
       ];
 
-      buildInputs = buildInputs ++ [
-        libgcrypt
-      ];
+      buildInputs = buildInputs ++ [ libgcrypt ];
 
       # remove broken symlink
       postInstall =

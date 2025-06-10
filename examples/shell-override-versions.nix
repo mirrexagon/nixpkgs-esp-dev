@@ -1,9 +1,7 @@
 # A standalone shell definition that overrides the versions of ESP-IDF and the ESP32 toolchain.
 
 let
-  nixpkgs-esp-dev = builtins.fetchGit {
-    url = "https://github.com/mirrexagon/nixpkgs-esp-dev.git";
-  };
+  nixpkgs-esp-dev = builtins.fetchGit { url = "https://github.com/mirrexagon/nixpkgs-esp-dev.git"; };
 
   pkgs = import <nixpkgs> { overlays = [ (import "${nixpkgs-esp-dev}/overlay.nix") ]; };
 in

@@ -7,9 +7,7 @@ let
     (pkgs.stdenv.mkDerivation {
       name = "test-build-esp8266-${builtins.replaceStrings [ "/" ] [ "-" ] example}";
 
-      buildInputs = with pkgs; [
-        esp8266-rtos-sdk
-      ];
+      buildInputs = with pkgs; [ esp8266-rtos-sdk ];
 
       phases = [ "buildPhase" ];
 
@@ -31,12 +29,12 @@ let
 
   examplesToBuild = [ "get-started/hello_world" ];
 
-  buildsList = builtins.map
-    (example:
-      let
-        build = build-esp8266-example { inherit example; };
-      in
-      pkgs.lib.attrsets.nameValuePair build.name build)
-    examplesToBuild;
+  buildsList = builtins.map (
+    example:
+    let
+      build = build-esp8266-example { inherit example; };
+    in
+    pkgs.lib.attrsets.nameValuePair build.name build
+  ) examplesToBuild;
 in
 builtins.listToAttrs buildsList
