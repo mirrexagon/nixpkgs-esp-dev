@@ -32,7 +32,7 @@ let
         # idf-component-manager wants to access the network, so we disable it.
         export IDF_COMPONENT_MANAGER=0
 
-        idf.py set-target ${target}
+        idf.py --preview set-target ${target}
         idf.py build
 
         mkdir $out
@@ -47,9 +47,12 @@ let
       "esp32s3"
       "esp32c2"
       "esp32c3"
+      "esp32c5"
       "esp32c6"
       "esp32h2"
       "esp32p4"
+      "esp32c61"
+      "esp32h21"
     ];
     example = [ "get-started/hello_world" ];
   };
@@ -69,7 +72,7 @@ let
         buildSpecific = build-idf-example (
           spec
           // {
-            esp-idf = pkgs."esp-idf-${spec.target}";
+            esp-idf = pkgs."esp-idf-${spec.target}" or pkgs.esp-idf-full;
             suffix = "specific";
           }
         );

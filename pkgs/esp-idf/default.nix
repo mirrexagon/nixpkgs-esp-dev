@@ -1,8 +1,8 @@
 {
   owner ? "espressif",
   repo ? "esp-idf",
-  rev ? "v5.4.1",
-  sha256 ? "sha256-5hwoy4QJFZdLApybV0LCxFD2VzM3Y6V7Qv5D3QjI16I=",
+  rev ? "v5.5",
+  sha256 ? "sha256-5G3IBVkpt8uuFzazwVHiwnqfMig3aMYmfcpKyMPWCBI=",
   toolsToInclude ? [
     "xtensa-esp-elf-gdb"
     "riscv32-esp-elf-gdb"
@@ -75,11 +75,12 @@ let
         idf-component-manager
         esp-coredump
         esptool
+        esp-idf-diag
         esp-idf-kconfig
         esp-idf-monitor
         esp-idf-nvs-partition-gen
-        esp-idf-size
         esp-idf-panic-decoder
+        esp-idf-size
         pyclang
         psutil
         rich
