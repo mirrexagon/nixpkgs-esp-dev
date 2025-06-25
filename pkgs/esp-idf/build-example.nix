@@ -45,7 +45,7 @@ stdenv.mkDerivation {
     buildPhase = ''
     set -x
 
-    cp -r $IDF_PATH/examples/${example}/* .
+    cp -r ${example}/* .
     chmod -R +w .
 
     # The build system wants to create a cache directory somewhere in the home

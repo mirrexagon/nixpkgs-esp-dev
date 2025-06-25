@@ -173,6 +173,9 @@ esp-idf = stdenv.mkDerivation rec {
   };
 };
 in
-esp-idf // {
-  example = callPackage ./build-example.nix { inherit esp-idf; };
+esp-idf // rec {
+  buildExample = callPackage ./build-example.nix { inherit esp-idf; };
+  examples = callPackage ./examples.nix { 
+    inherit esp-idf buildExample; 
+  };
 }
