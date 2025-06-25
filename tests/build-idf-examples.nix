@@ -1,45 +1,8 @@
 { pkgs }:
 
+with pkgs.lib;
+
 let
-  build-idf-example =
-    {
-      target,
-      example,
-      esp-idf,
-      suffix,
-    }:
-
-    (pkgs.stdenv.mkDerivation {
-      name = "test-build-${target}-${builtins.replaceStrings [ "/" ] [ "-" ] example}-${suffix}";
-
-      buildInputs = [
-        esp-idf
-      ];
-
-      phases = [ "buildPhase" ];
-
-      buildPhase = ''
-        set -x
-
-        cp -r $IDF_PATH/examples/${example}/* .
-        chmod -R +w .
-
-        # The build system wants to create a cache directory somewhere in the home
-        # directory, so we make up a home for it.
-        mkdir temp-home
-        export HOME=$(readlink -f temp-home)
-
-        # idf-component-manager wants to access the network, so we disable it.
-        export IDF_COMPONENT_MANAGER=0
-
-        idf.py set-target ${target}
-        idf.py build
-
-        mkdir $out
-        cp -r * $out
-      '';
-    });
-
   buildsNameList = pkgs.lib.attrsets.cartesianProduct {
     target = [
       "esp32"
@@ -51,7 +14,7 @@ let
       "esp32h2"
       "esp32p4"
     ];
-    example = [ "get-started/hello_world" "openthread/ot_rcp" ];
+    example = [ [ "get-started" "hello_world" ] ];
   };
 
   buildsList = pkgs.lib.lists.flatten (
@@ -59,20 +22,8 @@ let
       spec:
       let
         # Build each of these with both esp-idf-full and the appropriate esp-idf-esp32xx.
-        buildFull = build-idf-example (
-          spec
-          // {
-            esp-idf = pkgs.esp-idf-full;
-            suffix = "full";
-          }
-        );
-        buildSpecific = build-idf-example (
-          spec
-          // {
-            esp-idf = pkgs."esp-idf-${spec.target}";
-            suffix = "specific";
-          }
-        );
+        buildFull = attrByPath spec.example null pkgs.esp-idf-full.examples.${spec.target};
+        buildSpecific = attrByPath spec.example null pkgs."esp-idf-${spec.target}".examples.${spec.target};
       in
       [
         (pkgs.lib.attrsets.nameValuePair buildFull.name buildFull)

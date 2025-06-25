@@ -5,7 +5,8 @@ let
   traverseDir = path: prefix:
     let
       entries = builtins.readDir path;
-      isLeaf = builtins.hasAttr "sdkconfig.defaults" entries;
+      # Check if any file in the directory starts with "sdkconfig"
+      isLeaf = lib.any (name: lib.hasPrefix "sdkconfig" name) (builtins.attrNames entries);
       subdirs = lib.attrsets.filterAttrs (_: type: type == "directory") entries;
     in
       if isLeaf then
