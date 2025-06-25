@@ -33,6 +33,7 @@
   ninja,
   ncurses5,
   dfu-util,
+  writeShellApplication,
 }:
 
 let
@@ -92,8 +93,7 @@ let
       ]
     )
   );
-in
-stdenv.mkDerivation rec {
+esp-idf = stdenv.mkDerivation rec {
   pname = "esp-idf";
   version = rev;
 
@@ -171,4 +171,8 @@ stdenv.mkDerivation rec {
   passthru = {
     inherit tools allTools toolEnv;
   };
+};
+in
+esp-idf // {
+  example = callPackage ./build-example.nix { inherit esp-idf; };
 }

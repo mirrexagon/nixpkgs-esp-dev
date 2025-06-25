@@ -51,7 +51,7 @@ let
       "esp32h2"
       "esp32p4"
     ];
-    example = [ "get-started/hello_world" ];
+    example = [ "get-started/hello_world" "openthread/ot_rcp" ];
   };
 
   buildsList = pkgs.lib.lists.flatten (
