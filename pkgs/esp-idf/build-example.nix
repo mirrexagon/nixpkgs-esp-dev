@@ -1,6 +1,6 @@
 { stdenv, esp-idf, jq, writeShellApplication }:
 
-{ target, example }: let
+{ name, target, src }: let
 
   flash = writeShellApplication {
     name = "flash";
@@ -34,18 +34,18 @@
 in
 
 stdenv.mkDerivation {
-    name = "${target}-${builtins.replaceStrings [ "/" ] [ "-" ] example}";
+  inherit name;
 
-    buildInputs = [
-      esp-idf
-    ];
+  buildInputs = [
+    esp-idf
+  ];
 
-    phases = [ "buildPhase" ];
+  phases = [ "buildPhase" ];
 
-    buildPhase = ''
+  buildPhase = ''
     set -x
 
-    cp -r ${example}/* .
+    cp -r ${src}/* .
     chmod -R +w .
 
     # The build system wants to create a cache directory somewhere in the home

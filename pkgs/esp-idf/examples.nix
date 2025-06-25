@@ -2,7 +2,7 @@
 
 let
   # Recursively convert the directory tree into a nested attribute set
-  traverseDir = path:
+  traverseDir = path: prefix:
     let
       entries = builtins.readDir path;
       isLeaf = builtins.hasAttr "sdkconfig.defaults" entries;
@@ -11,11 +11,13 @@ let
       if isLeaf then
         (buildExample {
           target = "esp32c6";
-          example = path;
+          name = "esp32c6-${prefix}";
+          src = path;
         })
       else
-        lib.attrsets.mapAttrs (name: _: traverseDir "${path}/${name}") subdirs;
+        lib.attrsets.mapAttrs (name: _: traverseDir "${path}/${name}" 
+          (if prefix == "" then name else "${prefix}-${name}")) subdirs;
 in
 
 # Call traverseDir on your root path
-traverseDir "${esp-idf}/examples"
+traverseDir "${esp-idf}/examples" ""
