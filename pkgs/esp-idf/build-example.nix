@@ -7,7 +7,6 @@
     text = ''
       set -e
       
-      # Default to the current directory if no argument is provided
       SCRIPT_DIR="$(dirname "$(readlink -f "''${BASH_SOURCE[0]}")")"
       cd "$SCRIPT_DIR/../build"
 
