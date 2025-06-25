@@ -1,4 +1,4 @@
-{ lib, esp-idf, buildExample }:
+{ lib, esp-idf, buildExample, target }:
 
 let
   # Recursively convert the directory tree into a nested attribute set
@@ -10,8 +10,8 @@ let
     in
       if isLeaf then
         (buildExample {
-          target = "esp32c6";
-          name = "esp32c6-${prefix}";
+          target = target;
+          name = "${target}-${prefix}";
           src = path;
         })
       else

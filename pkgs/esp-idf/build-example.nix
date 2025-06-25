@@ -1,9 +1,9 @@
-{ stdenv, esp-idf, jq, writeShellApplication }:
+{ lib, stdenv, esp-idf, jq, writeShellApplication }:
 
 { name, target, src }: let
 
   flash = writeShellApplication {
-    name = "flash";
+    name = "${name}-flash";
     text = ''
       set -e
       
@@ -63,7 +63,11 @@ stdenv.mkDerivation {
     cp -r * $out
 
     mkdir $out/bin
-    cp ${flash}/bin/flash $out/bin/
+    cp ${lib.getExe flash} $out/bin/
     '';
+
+  meta = {
+    mainProgram = "${name}-flash";
+  };
 }
 
