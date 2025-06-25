@@ -6,19 +6,22 @@ let
     let
       entries = builtins.readDir path;
       # Check if any file in the directory starts with "sdkconfig"
-      isLeaf = lib.any (name: lib.hasPrefix "sdkconfig" name) (builtins.attrNames entries);
-      subdirs = lib.attrsets.filterAttrs (_: type: type == "directory") entries;
+      isLeaf = lib.any (name: lib.hasPrefix "sdkconfig" name) (lib.attrNames entries);
+      # Filter to only include directories
+      subdirs = lib.filterAttrs (_: type: type == "directory") entries;
     in
       if isLeaf then
+        # This is a leaf node (an actual example project)
         (buildExample {
-          target = target;
+          inherit target;
           name = "${target}-${prefix}";
           src = path;
         })
       else
-        lib.attrsets.mapAttrs (name: _: traverseDir "${path}/${name}" 
-          (if prefix == "" then name else "${prefix}-${name}")) subdirs;
+        # Continue traversing subdirectories
+        lib.mapAttrs 
+          (name: _: traverseDir "${path}/${name}" 
+            (if prefix == "" then name else "${prefix}-${name}")) 
+          subdirs;
 in
-
-# Call traverseDir on your root path
 traverseDir "${esp-idf}/examples" ""
