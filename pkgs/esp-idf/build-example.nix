@@ -42,8 +42,6 @@ stdenv.mkDerivation {
   phases = [ "buildPhase" ];
 
   buildPhase = ''
-    set -x
-
     cp -r ${src}/* .
     chmod -R +w .
 
