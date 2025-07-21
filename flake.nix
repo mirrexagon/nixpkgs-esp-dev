@@ -27,6 +27,8 @@
         packages = {
           inherit (pkgs)
             esp-idf-full
+            esp-idf-riscv
+            esp-idf-xtensa
             esp-idf-esp32
             esp-idf-esp32c2
             esp-idf-esp32c3
