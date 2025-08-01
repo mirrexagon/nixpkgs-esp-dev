@@ -90,6 +90,11 @@ with pythonPackages; rec {
   esptool = buildPythonPackage rec {
     pname = "esptool";
     version = "4.9.1";
+    pyproject = true;
+
+    build-system = [
+      setuptools
+    ];
 
     src = fetchPypi {
       inherit pname version;
@@ -99,6 +104,8 @@ with pythonPackages; rec {
     doCheck = false;
 
     propagatedBuildInputs = [
+      intelhex
+      argcomplete
       bitstring
       cryptography
       ecdsa
@@ -189,6 +196,11 @@ with pythonPackages; rec {
   esp-idf-size = buildPythonPackage rec {
     pname = "esp-idf-size";
     version = "1.7.1";
+    pyproject = true;
+
+    build-system = [
+      setuptools
+    ];
 
     src = fetchPypi {
       inherit version;
@@ -199,6 +211,7 @@ with pythonPackages; rec {
     doCheck = false;
 
     propagatedBuildInputs = [
+      rich
       pyyaml
     ];
 
@@ -236,6 +249,11 @@ with pythonPackages; rec {
   pyclang = buildPythonPackage rec {
     pname = "pyclang";
     version = "0.6.3";
+    pyproject = true;
+
+    build-system = [
+      setuptools
+    ];
 
     src = fetchPypi {
       inherit pname version;
@@ -252,6 +270,11 @@ with pythonPackages; rec {
   freertos_gdb = buildPythonPackage rec {
     pname = "freertos-gdb";
     version = "1.0.4";
+    pyproject = true;
+
+    build-system = [
+      setuptools
+    ];
 
     src = fetchPypi {
       inherit pname version;
@@ -259,9 +282,6 @@ with pythonPackages; rec {
     };
 
     doCheck = false;
-
-    propagatedBuildInputs = [
-    ];
 
     meta = {
       homepage = "https://github.com/espressif/freertos-gdb";
@@ -271,8 +291,11 @@ with pythonPackages; rec {
   esp-idf-panic-decoder = buildPythonPackage rec {
     pname = "esp-idf-panic-decoder";
     version = "1.4.1";
+    pyproject = true;
 
-    format = "pyproject";
+    build-system = [
+      setuptools
+    ];
 
     src = fetchPypi {
       inherit version;
@@ -284,7 +307,6 @@ with pythonPackages; rec {
 
     propagatedBuildInputs = [
       pyelftools
-      setuptools
     ];
 
     meta = {
