@@ -6,7 +6,7 @@ addIdfEnvVars() {
         export IDF_PATH="$1"
         export IDF_TOOLS_PATH="$IDF_PATH/tools"
         export IDF_PYTHON_CHECK_CONSTRAINTS=no
-        export IDF_PYTHON_ENV_PATH="$IDF_PATH/python-env"
+        export IDF_PYTHON_ENV_PATH="$(readlink $IDF_PATH/python-env)"
         addToSearchPath PATH "$IDF_TOOLS_PATH"
 
         # Extra paths from `export.sh` in the ESP-IDF repo.
