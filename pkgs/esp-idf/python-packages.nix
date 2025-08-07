@@ -9,7 +9,8 @@
   fetchurl,
   pythonPackages,
 }:
-with pythonPackages; rec {
+with pythonPackages;
+rec {
   idf-component-manager = buildPythonPackage rec {
     pname = "idf-component-manager";
     version = "2.2.2";
@@ -26,33 +27,32 @@ with pythonPackages; rec {
     ];
     doCheck = false;
 
-    propagatedBuildInputs =
-      [
-        cachecontrol
-        cffi
-        click
-        colorama
-        jsonref
+    propagatedBuildInputs = [
+      cachecontrol
+      cffi
+      click
+      colorama
+      jsonref
 
-        pydantic
-        pydantic-core
-        pydantic-core
-        pydantic-settings
-        pyparsing
+      pydantic
+      pydantic-core
+      pydantic-core
+      pydantic-settings
+      pyparsing
 
-        packaging
-        pyyaml
-        ruamel-yaml
-        requests
-        requests-file
-        requests-toolbelt
-        schema
-        six
-        tqdm
-        typing-extensions
-        truststore
-      ]
-      ++ cachecontrol.optional-dependencies.filecache;
+      packaging
+      pyyaml
+      ruamel-yaml
+      requests
+      requests-file
+      requests-toolbelt
+      schema
+      six
+      tqdm
+      typing-extensions
+      truststore
+    ]
+    ++ cachecontrol.optional-dependencies.filecache;
 
     meta = {
       homepage = "https://github.com/espressif/idf-component-manager";
@@ -89,7 +89,7 @@ with pythonPackages; rec {
 
   esptool = buildPythonPackage rec {
     pname = "esptool";
-    version = "4.9.1";
+    version = "4.9.0";
     pyproject = true;
 
     build-system = [
@@ -98,7 +98,7 @@ with pythonPackages; rec {
 
     src = fetchPypi {
       inherit pname version;
-      sha256 = "sha256-qMDmKxZGkik1wqG6knfuMNYy6ziiH92z603iJ9j+07o=";
+      sha256 = "sha256-9ja0VS84c835TPry1cN/VAfx8z33NkPv7lE4ZzELao4=";
     };
 
     doCheck = false;
@@ -239,7 +239,7 @@ with pythonPackages; rec {
       cryptography
     ];
 
-    pythonImportsCheck = ["esp_idf_nvs_partition_gen"];
+    pythonImportsCheck = [ "esp_idf_nvs_partition_gen" ];
 
     meta = {
       homepage = "https://pypi.org/project/esp-idf-nvs-partition-gen/";
