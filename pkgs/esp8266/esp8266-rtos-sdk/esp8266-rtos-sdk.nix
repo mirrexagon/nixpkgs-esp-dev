@@ -1,55 +1,60 @@
-{ rev ? "v3.4"
-, sha256 ? "sha256-WhGVo4NDOkOlu9tsLFhOcZYthmVfxquOibZ+nGetbuo="
-, stdenv
-, lib
-, fetchFromGitHub
+{
+  rev ? "v3.4",
+  sha256 ? "sha256-WhGVo4NDOkOlu9tsLFhOcZYthmVfxquOibZ+nGetbuo=",
+  extraPythonPackages ? (pythonPackages: [ ]),
+  stdenv,
+  lib,
+  fetchFromGitHub,
 
-, python3
-, fetchPypi
+  python3,
+  fetchPypi,
 
   # Tools for using ESP8266_RTOS_SDK.
-, git
-, wget
-, gnumake
-, flex
-, bison
-, gperf
-, pkg-config
-, ncurses5
+  git,
+  wget,
+  gnumake,
+  flex,
+  bison,
+  gperf,
+  pkg-config,
+  ncurses5,
 
-, cmake
-, ninja
+  cmake,
+  ninja,
 
-, gcc-xtensa-lx106-elf-bin
-, esptool
+  gcc-xtensa-lx106-elf-bin,
+  esptool,
 }:
 
 let
-  customPython =
-    (python3.withPackages
-      (pythonPackages:
-        with pythonPackages;
-        [
-          # This list is from `requirements.txt` in the ESP8266_RTOS_SDK
-          # checkout.
-          setuptools
-          click
-          pyserial
-          future
-          cryptography
+  customPython = (
+    python3.withPackages (
+      pythonPackages:
+      with pythonPackages;
+      [
+        # This list is from `requirements.txt` in the ESP8266_RTOS_SDK
+        # checkout.
+        setuptools
+        click
+        pyserial
+        future
+        cryptography
 
-          (pyparsing.overrideAttrs (oldAttrs: {
-            src = fetchPypi {
-              pname = "pyparsing";
-              version = "2.3.1";
-              sha256 = "sha256-ZskmiGJkGrysSpa6dFBuWUyITj9XaQppbSGtghDtZno=";
-            };
+        (pyparsing.overrideAttrs (oldAttrs: {
+          src = fetchPypi {
+            pname = "pyparsing";
+            version = "2.3.1";
+            sha256 = "sha256-ZskmiGJkGrysSpa6dFBuWUyITj9XaQppbSGtghDtZno=";
+          };
 
-            buildInputs = [ setuptools ];
-          }))
+          buildInputs = [ setuptools ];
+        }))
 
-          pyelftools
-        ]));
+        pyelftools
+      ]
+      ++ (extraPythonPackages pythonPackages)
+    )
+  );
 in
 stdenv.mkDerivation rec {
   pname = "esp8266-rtos-sdk";

@@ -13,6 +13,7 @@
     "openocd-esp32"
     "esp-rom-elfs"
   ],
+  extraPythonPackages ? (pythonPackages: [ ]),
   stdenv,
   lib,
   fetchFromGitHub,
@@ -91,6 +92,7 @@ let
         # The esp idf vscode extension seems to want pip, too
         pip
       ]
+      ++ (extraPythonPackages pythonPackages)
     )
   );
 in
