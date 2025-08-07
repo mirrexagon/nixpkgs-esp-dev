@@ -107,4 +107,6 @@ stdenv.mkDerivation rec {
     ln -s ${customPython} $out/python-env
     ln -s ${customPython}/lib $out/lib
   '';
+
+  meta.broken = true;
 }
