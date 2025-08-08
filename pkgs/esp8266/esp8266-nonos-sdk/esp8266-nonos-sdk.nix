@@ -1,11 +1,12 @@
-{ stdenv
-, lib
-, fetchFromGitHub
+{
+  stdenv,
+  lib,
+  fetchFromGitHub,
 
-, gnumake
+  gnumake,
 
-, gcc-xtensa-lx106-elf-bin
-, esptool
+  gcc-xtensa-lx106-elf-bin,
+  esptool,
 }:
 
 stdenv.mkDerivation rec {

@@ -21,7 +21,7 @@ let
       let
         # Build each of these with both esp-idf-full and the appropriate esp-idf-esp32xx.
         buildFull = pkgs.lib.attrByPath spec.example null pkgs.esp-idf-full.examples.${spec.target};
-        buildSpecific = pkgs.lib.attrByPath spec.example null pkgs."esp-idf-${spec.target}".examples.${spec.target};
+        buildSpecific = pkgs.lib.attrByPath spec.example null (pkgs."esp-idf-${spec.target}".examples.${spec.target} or pkgs.esp-idf-full.examples.${spec.target});
       in
       [
         (pkgs.lib.attrsets.nameValuePair buildFull.name buildFull)

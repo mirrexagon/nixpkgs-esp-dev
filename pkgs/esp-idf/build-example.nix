@@ -53,7 +53,8 @@ stdenv.mkDerivation {
     # idf-component-manager wants to access the network, so we disable it.
     export IDF_COMPONENT_MANAGER=0
 
-    idf.py set-target ${target}
+    idf.py --preview set-target ${target}
+    export NINJAFLAGS=-v
     idf.py build
 
     mkdir $out
