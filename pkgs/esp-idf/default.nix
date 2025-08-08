@@ -34,6 +34,7 @@
   ninja,
   ncurses5,
   dfu-util,
+  writeShellApplication,
 }:
 
 let
@@ -95,55 +96,54 @@ let
       ++ (extraPythonPackages pythonPackages)
     )
   );
-in
-stdenv.mkDerivation rec {
-  pname = "esp-idf";
-  version = rev;
+  esp-idf = stdenv.mkDerivation rec {
+    pname = "esp-idf";
+    version = rev;
 
-  inherit src;
+    inherit src;
 
-  # This is so that downstream derivations will have IDF_PATH set.
-  setupHook = ./setup-hook.sh;
+    # This is so that downstream derivations will have IDF_PATH set.
+    setupHook = ./setup-hook.sh;
 
-  nativeBuildInputs = [ makeWrapper ];
+    nativeBuildInputs = [ makeWrapper ];
 
-  propagatedBuildInputs = [
-    # This is in propagatedBuildInputs so that downstream derivations will run
-    # the Python setup hook and get PYTHONPATH set up correctly.
-    customPython
+    propagatedBuildInputs = [
+      # This is in propagatedBuildInputs so that downstream derivations will run
+      # the Python setup hook and get PYTHONPATH set up correctly.
+      customPython
 
-    # Tools required to use ESP-IDF.
-    git
-    wget
-    gnumake
+      # Tools required to use ESP-IDF.
+      git
+      wget
+      gnumake
 
-    flex
-    bison
-    gperf
-    pkg-config
+      flex
+      bison
+      gperf
+      pkg-config
 
-    cmake
-    ninja
+      cmake
+      ninja
 
-    ncurses5
+      ncurses5
 
-    dfu-util
-  ] ++ builtins.attrValues tools;
+      dfu-util
+    ] ++ builtins.attrValues tools;
 
-  # We are including cmake and ninja so that downstream derivations (eg. shells)
-  # get them in their environment, but we don't actually want any of their build
-  # hooks to run, since we aren't building anything with them right now.
-  dontUseCmakeConfigure = true;
-  dontUseNinjaBuild = true;
-  dontUseNinjaInstall = true;
-  dontUseNinjaCheck = true;
+    # We are including cmake and ninja so that downstream derivations (eg. shells)
+    # get them in their environment, but we don't actually want any of their build
+    # hooks to run, since we aren't building anything with them right now.
+    dontUseCmakeConfigure = true;
+    dontUseNinjaBuild = true;
+    dontUseNinjaInstall = true;
+    dontUseNinjaCheck = true;
 
-  __structuredAttrs = true;
-  inherit toolEnv;
+    __structuredAttrs = true;
+    inherit toolEnv;
 
-  installPhase = ''
-    mkdir -p $out
-    cp -rv . $out/
+    installPhase = ''
+      mkdir -p $out
+      cp -rv . $out/
 
     # Inspired from how idf.py find the version in the sources.
     # https://github.com/espressif/esp-idf/blob/4e036983a751e4667ade94c8f6f6bf1e7f78eff0/tools/idf_py_actions/tools.py#L82
@@ -155,16 +155,16 @@ stdenv.mkDerivation rec {
     ')
     echo "v$IDF_VERSION" > $out/version.txt
 
-    # Link the Python environment in so that:
-    # - The setup hook can set IDF_PYTHON_ENV_PATH to it.
-    # - In shell derivations, the Python setup hook will add the site-packages
-    #   directory to PYTHONPATH.
-    ln -s ${customPython} $out/python-env
-    ln -s ${customPython}/lib $out/lib
+      # Link the Python environment in so that:
+      # - The setup hook can set IDF_PYTHON_ENV_PATH to it.
+      # - In shell derivations, the Python setup hook will add the site-packages
+      #   directory to PYTHONPATH.
+      ln -s ${customPython} $out/python-env
+      ln -s ${customPython}/lib $out/lib
 
-    for key in "''${!toolEnv[@]}"; do
-      printf "export $key=%q" "''${toolEnv[$key]}"
-    done > $out/.tool-env
+      for key in "''${!toolEnv[@]}"; do
+        printf "export $key=%q" "''${toolEnv[$key]}"
+      done > $out/.tool-env
 
     # make esp-idf cmake git version detection happy
     cd $out
@@ -191,7 +191,27 @@ stdenv.mkDerivation rec {
 EOF
   '';
 
-  passthru = {
-    inherit tools allTools toolEnv;
+    passthru = {
+      inherit tools allTools toolEnv;
+    };
   };
+  buildExample = callPackage ./build-example.nix { inherit esp-idf; };
+  targets = [
+    "esp32"
+    "esp32c2"
+    "esp32c3"
+    "esp32s2"
+    "esp32s3"
+    "esp32c5"
+    "esp32c6"
+    "esp32h2"
+    "esp32p4"
+    "esp32c61"
+    "esp32h21"
+  ];
+  in
+esp-idf // {
+  examples = lib.genAttrs targets (target: callPackage ./examples.nix {
+    inherit esp-idf buildExample target;
+  });
 }

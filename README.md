@@ -57,6 +57,34 @@ You can create a standalone `shell.nix` for your project that downloads `nixpkgs
 See `examples/shell-standalone.nix` for an example.
 
 
+## Accessing ESP-IDF Examples
+
+ESP-IDF comes with many example projects that demonstrate various features and capabilities. These examples are accessible as Nix packages through the `examples` attribute of each ESP-IDF package. The examples are organized in a nested attribute set that mirrors the directory structure of ESP-IDF's `examples` directory.
+
+### Building an example
+
+You can build any example using `nix build` with the appropriate attribute path:
+
+```bash
+# Format: .#esp-idf-full.examples.<target>.<path>.<to>.<example>
+nix build .#esp-idf-full.examples.esp32.get-started.hello_world
+```
+
+This will build the "hello_world" example for the ESP32 target. The resulting package includes a flash script that can be used to flash the example to your device:
+
+```bash
+./result/bin/esp32-get-started-hello_world-flash
+```
+
+The flashing script is set as the derivation's main program, making it possible to directly run build and flash the firmware with `nix run`.
+
+```bash
+nix run .#esp-idf-full.examples.esp32.get-started.hello_world
+```
+
+Additional arguments (such as `--port`) are passed directly to `esptool.py`
+
+
 ## Overriding ESP-IDF and ESP32 toolchain versions
 There is a default version of ESP-IDF specified in `pkgs/esp-idf/default.nix`. To use a different version of ESP-IDF or to pin the version, override a `esp-idf-*` derivations with the desired version and the hash for it. The correct version of the tools will be downloaded automatically.
 
