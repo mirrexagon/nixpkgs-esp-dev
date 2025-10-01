@@ -1,21 +1,24 @@
 { toolSpecList # The `tools` entry in `tools/tools.json` in an ESP-IDF checkout.
 , versionSuffix # A string to use in the version of the tool derivations.
-, toolFhsEnvTargetPackages ? { # Extra dependencies for particular tools
-  esp-clang = pkgs: (with pkgs; [ zlib libxml2 ]);
-  openocd-esp32 = pkgs: (with pkgs; [ zlib libusb1 udev ]);
-}
 
 , stdenv
 , system
 , lib
 , fetchurl
-, buildFHSEnv
 , makeWrapper
+, autoPatchelfHook
 
   # Dependencies for the various binary tools.
 , zlib
 , libusb1
 , udev
+, glibc
+, ncurses5
+, python3
+, python310
+, python311
+, python312
+, libxml2
 }:
 
 let
@@ -26,6 +29,21 @@ let
     "x86_64-darwin" = "macos";
     "aarch64-darwin" = "macos-arm64";
   };
+
+  # Common runtime dependencies for ELF binaries
+  commonRuntimeDeps = [
+    glibc
+    stdenv.cc.cc.lib
+    zlib
+    ncurses5
+    libusb1
+    udev
+    python3
+    python310
+    python311
+    python312
+    libxml2
+  ];
 
   toolSpecToDerivation = toolSpec:
     let
@@ -48,7 +66,7 @@ let
       license = { spdxId = mergedToolSpec.license; };
       url = targetVersionSpec.url;
       sha256 = targetVersionSpec.sha256;
-      targetPkgs = toolFhsEnvTargetPackages."${mergedToolSpec.name}" or (_: []);
+      runtimeDeps = commonRuntimeDeps;
       exportVars = mergedToolSpec.export_vars;
       # strip_container_dirs specifies the number of parent directories to remove
       stripContainerDirs = mergedToolSpec.strip_container_dirs or 0;
@@ -65,21 +83,14 @@ let
     , license
     , url
     , sha256
-    , targetPkgs
+    , runtimeDeps
     , exportVars
     , stripContainerDirs
     , exportPaths
     }:
 
     let
-      fhsEnv = buildFHSEnv {
-        name = "${pname}-env";
-        inherit targetPkgs;
-        runScript = "";
-      };
-
       binPaths = map (path: lib.foldl' (a: b: if a == "" then b else "${a}/${b}") "" path) exportPaths;
-
       exportVarsWrapperArgsList = lib.attrsets.mapAttrsToList (name: value: "--set \"${name}\" \"${value}\"") exportVars;
     in stdenv.mkDerivation (finalAttrs: {
       inherit pname version;
@@ -88,9 +99,19 @@ let
         inherit url sha256;
       };
 
-      buildInputs = [ makeWrapper ];
+      nativeBuildInputs = [ makeWrapper ] ++ lib.optionals stdenv.isLinux [ autoPatchelfHook ];
+      buildInputs = lib.optionals stdenv.isLinux runtimeDeps;
 
-      phases = [ "unpackPhase" "installPhase" ];
+      # Configure autoPatchelfHook to ignore missing Python libraries that aren't available
+      autoPatchelfIgnoreMissingDeps = [
+        "libpython3.13.so.1.0"
+        "libpython3.9.so.1.0"
+        "libpython3.8.so.1.0"
+        "libpython3.7.so.1.0"
+        "libpython3.6.so.1.0"
+      ];
+
+      phases = [ "unpackPhase" "installPhase" ] ++ lib.optionals stdenv.isLinux [ "fixupPhase" ];
 
       setSourceRoot = ''sourceRoot=$(echo ./${lib.strings.replicate stripContainerDirs "*/"})'';
 
@@ -101,16 +122,9 @@ let
 
       noDumpEnvVars = true;
 
-      installPhase = let
-        wrapCmd = if (system == "x86_64-linux") || (system == "aarch64-linux") then
-          ''
-          makeWrapper ${fhsEnv}/bin/${pname}-env "$wrapper_file" --add-flags "$file" ${lib.strings.concatStringsSep " " exportVarsWrapperArgsList}
-        ''
-      else
-      ''
-        makeWrapper "$file" "$wrapper_file" ${lib.strings.concatStringsSep " " exportVarsWrapperArgsList}
-      '';
-      in ''
+      dontStrip = true;
+
+      installPhase = ''
         cp -r . $out
         rm $out/.attrs.*
 
@@ -122,11 +136,15 @@ let
             mv $out/bin $out/unwrapped_bin
             bindir=unwrapped_bin
           fi
-          for file in $out/$bindir/*; do
-            wrapper_file="$out/bin/$(basename "$file")"
-            [ -d "$out/bin" ] || mkdir "$out/bin"
-            ${wrapCmd}
-          done
+          if [ -d "$out/$bindir" ]; then
+            for file in $out/$bindir/*; do
+              if [ -f "$file" ] && [ -x "$file" ]; then
+                wrapper_file="$out/bin/$(basename "$file")"
+                [ -d "$out/bin" ] || mkdir -p "$out/bin"
+                makeWrapper "$file" "$wrapper_file" ${lib.strings.concatStringsSep " " exportVarsWrapperArgsList}
+              fi
+            done
+          fi
         done
       '';
 
