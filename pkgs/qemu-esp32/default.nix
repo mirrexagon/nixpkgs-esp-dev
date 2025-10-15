@@ -44,7 +44,7 @@
         owner = "espressif";
         repo = "qemu";
         rev = "esp-develop-9.2.2-20250817";
-        hash = "sha256-6bL6v231xD/H1DB+ze3eW2x3VCHlE/nXqOmu3RKk8c4=";
+        hash = "sha256-482BeOmWkaOn2H3inH7sZADsxV331Nssbs+6iYCTFCg=";
         nativeBuildInputs = [
           cacert
           git
