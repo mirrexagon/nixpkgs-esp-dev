@@ -13,13 +13,13 @@ with pythonPackages;
 rec {
   idf-component-manager = buildPythonPackage rec {
     pname = "idf-component-manager";
-    version = "2.2.2";
+    version = "2.4.2";
     pyproject = true;
 
     src = fetchPypi {
       inherit version;
       pname = "idf_component_manager";
-      sha256 = "sha256-HKOJIThQ05khSBhDzVjX+cF2hWrBivNZXmQZWBpIGvc=";
+      sha256 = "sha256-P93LjDZFARmy2S8oIe6uB//JyN2bSU++3oInyLE2vMk=";
     };
 
     build-system = [
@@ -61,13 +61,13 @@ rec {
 
   esp-coredump = buildPythonPackage rec {
     pname = "esp-coredump";
-    version = "1.13.1";
+    version = "1.14.0";
     pyproject = true;
 
     src = fetchPypi {
       inherit version;
       pname = "esp_coredump";
-      sha256 = "sha256-rz0HbQ4DHB7vClZICYW/Q13N+48MWqEpnup0TyYFzIk=";
+      sha256 = "sha256-HDqIHObATfq408mDzpN8WQDIQxfpZFnK2L+LWEcrhzs=";
     };
 
     build-system = [
@@ -89,7 +89,7 @@ rec {
 
   esptool = buildPythonPackage rec {
     pname = "esptool";
-    version = "4.9.0";
+    version = "5.1.0";
     pyproject = true;
 
     build-system = [
@@ -98,20 +98,22 @@ rec {
 
     src = fetchPypi {
       inherit pname version;
-      sha256 = "sha256-9ja0VS84c835TPry1cN/VAfx8z33NkPv7lE4ZzELao4=";
+      sha256 = "sha256-Lqm81+smPTgKT+AXCFahDkxl4/OMdX69xzWEyN2DIto=";
     };
 
     doCheck = false;
 
     propagatedBuildInputs = [
-      intelhex
       argcomplete
       bitstring
+      click
       cryptography
       ecdsa
+      intelhex
       pyserial
-      reedsolo
       pyyaml
+      reedsolo
+      rich-click
     ];
 
     # Replaces esptool.py import with .esptool.py-wrapped
@@ -135,7 +137,7 @@ rec {
 
   esp-idf-kconfig = buildPythonPackage rec {
     pname = "esp-idf-kconfig";
-    version = "2.5.0";
+    version = "3.3.0";
     pyproject = true;
 
     build-system = [
@@ -145,13 +147,14 @@ rec {
     src = fetchPypi {
       inherit version;
       pname = "esp_idf_kconfig";
-      sha256 = "sha256-G65GbZh1tlOITRJG1bDKfHq247f0/1pzLjyAljHg45I=";
+      sha256 = "sha256-M4kOVDI/dxX5BlxTCbERztZdKiu+5Od81oSvTRNqllo=";
     };
 
     doCheck = false;
 
     propagatedBuildInputs = [
       kconfiglib
+      pyparsing
 
       # These packages aren't declared as dependencies but will fail idf.py's
       # initial dependency check.
@@ -166,13 +169,13 @@ rec {
 
   esp-idf-monitor = buildPythonPackage rec {
     pname = "esp-idf-monitor";
-    version = "1.7.0";
+    version = "1.8.0";
     pyproject = true;
 
     src = fetchPypi {
       inherit version;
       pname = "esp_idf_monitor";
-      sha256 = "sha256-lU5ec8f7d3R+PzBkfiCVbYbnD7ZO1rOJC3TA5ulKGdk=";
+      sha256 = "sha256-jCJPOBBd+BadDZos0YIV7L3114gBvsLlA4xQLYRxl/8=";
     };
 
     build-system = [
@@ -195,7 +198,7 @@ rec {
 
   esp-idf-size = buildPythonPackage rec {
     pname = "esp-idf-size";
-    version = "1.7.1";
+    version = "2.0.0";
     pyproject = true;
 
     build-system = [
@@ -205,7 +208,7 @@ rec {
     src = fetchPypi {
       inherit version;
       pname = "esp_idf_size";
-      sha256 = "sha256-labUYKJukzADWq8eHCXM83FgVJdWIUMgzMqEBNl9zBs=";
+      sha256 = "sha256-EmPMN7Ypnv0/zCCzClKG4cVr+Yo91q0R7mV2Pc+CrEI=";
     };
 
     doCheck = false;
@@ -290,7 +293,7 @@ rec {
 
   esp-idf-panic-decoder = buildPythonPackage rec {
     pname = "esp-idf-panic-decoder";
-    version = "1.4.1";
+    version = "1.4.2";
     pyproject = true;
 
     build-system = [
@@ -300,7 +303,7 @@ rec {
     src = fetchPypi {
       inherit version;
       pname = "esp_idf_panic_decoder";
-      sha256 = "sha256-l0HQFZlWB0PkiK4EkiIotYBkX5hXHCu9v+f0noUcKwM=";
+      sha256 = "sha256-wjk2lUISeipxw7CDIORQTxKSC2QAW0cjYqM+wkBk9/U=";
     };
 
     doCheck = false;

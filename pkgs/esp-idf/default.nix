@@ -1,8 +1,8 @@
 {
   owner ? "espressif",
   repo ? "esp-idf",
-  rev ? "v5.5.1",
-  sha256 ? "sha256-vZ/ZMrOYIgHq0fHnFSN5GLQfYREnf/0PcQI5QllxpTM=",
+  rev ? "v6.0-beta1",
+  sha256 ? "sha256-YLvUBvoM3ERlNV3Dx0u+itJG+jFyETmAGpzfcyoCoh0=",
   toolsToInclude ? [
     "xtensa-esp-elf-gdb"
     "riscv32-esp-elf-gdb"
@@ -84,9 +84,13 @@ let
         esp-idf-panic-decoder
         esp-idf-size
         pyclang
+        pyparsing
         psutil
         rich
         argcomplete
+
+        tree-sitter
+        tree-sitter-grammars.tree-sitter-c
 
         freertos_gdb
 
