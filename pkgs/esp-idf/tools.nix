@@ -2,7 +2,6 @@
 , versionSuffix # A string to use in the version of the tool derivations.
 
 , stdenv
-, system
 , lib
 , fetchurl
 , makeWrapper
@@ -47,7 +46,7 @@ let
 
   toolSpecToDerivation = toolSpec:
     let
-      targetPlatform = systemToToolPlatformString.${system};
+      targetPlatform = systemToToolPlatformString.${stdenv.hostPlatform.system};
       targetVersionSpecs = builtins.elemAt toolSpec.versions 0;
       targetVersionSpec = targetVersionSpecs.${targetPlatform} or targetVersionSpecs.any;
       platformOverrides = builtins.filter (o: lib.elem targetPlatform o.platforms) (toolSpec.platform_overrides or []);
