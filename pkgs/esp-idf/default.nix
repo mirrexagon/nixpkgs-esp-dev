@@ -1,8 +1,8 @@
 {
   owner ? "espressif",
   repo ? "esp-idf",
-  rev ? "v5.5.1",
-  sha256 ? "sha256-vZ/ZMrOYIgHq0fHnFSN5GLQfYREnf/0PcQI5QllxpTM=",
+  rev ? "v5.5.2",
+  sha256 ? "sha256-xYlj8uG/nxeMMNdAY8AbBiA7RYuEOOxoDyb+wVK8QWc=",
   toolsToInclude ? [
     "xtensa-esp-elf-gdb"
     "riscv32-esp-elf-gdb"
@@ -83,6 +83,8 @@ let
         esp-idf-nvs-partition-gen
         esp-idf-panic-decoder
         esp-idf-size
+        tree-sitter
+        tree-sitter-grammars.tree-sitter-c
         pyclang
         psutil
         rich
