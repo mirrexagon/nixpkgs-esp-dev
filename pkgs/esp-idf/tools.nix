@@ -146,6 +146,12 @@ let
             done
           fi
         done
+
+        # for clangd to find the system headers
+        libdir=''${bindir%/bin}/lib
+        if [ -d $out/$libdir ]; then
+          ln -s $libdir $out/lib
+        fi
       '';
 
       meta = with lib; {
