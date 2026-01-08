@@ -2,7 +2,7 @@
   description = "ESP8266/ESP32 development tools";
 
   inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs/nixos-25.05";
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-25.11";
     flake-utils.url = "github:numtide/flake-utils";
   };
 
@@ -21,6 +21,9 @@
         pkgs = import nixpkgs {
           inherit system;
           overlays = [ self.overlays.default ];
+          config.permittedInsecurePackages = [
+            "python3.13-ecdsa-0.19.1"
+          ];
         };
       in
       {
