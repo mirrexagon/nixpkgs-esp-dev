@@ -5,6 +5,8 @@ This repo contains derivations for ESP-IDF, and most of the toolchains and tools
 
 Released into the public domain via CC0 (see `COPYING`).
 
+**Security note**: The Python `ecdsa` package used by esptool is marked as insecure due to https://github.com/tlsfuzzer/python-ecdsa/issues/352. It is set as a permitted insecure package by the flake and the non-flake shells. See https://github.com/mirrexagon/nixpkgs-esp-dev/issues/109.
+
 
 ## Getting started
 ### `nix develop`
