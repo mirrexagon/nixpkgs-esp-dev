@@ -17,7 +17,7 @@
 , python310
 , python311
 , python312
-, libxml2
+, libxml2_13
 }:
 
 let
@@ -41,7 +41,7 @@ let
     python310
     python311
     python312
-    libxml2
+    libxml2_13
   ];
 
   toolSpecToDerivation = toolSpec:
