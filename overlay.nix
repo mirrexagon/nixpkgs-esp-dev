@@ -20,6 +20,9 @@ final: prev: let
     ];
   };
 
+  esp-rustc = prev.callPackage ./pkgs/rustc { };
+  esp-rustc-src = prev.callPackage ./pkgs/rustc/src.nix { };
+
   mkDeprecatedAlias = arch: name: alias: {
     "${name}" = builtins.warn ''
         [DEPRECATION WARNING] `${name}` is deprecated and will be removed starting with ESP-IDF 6.0.
@@ -40,7 +43,7 @@ final: prev: let
     { name = "esp-idf-esp32p4"; alias = esp-idf-riscv;  arch = "riscv"; }
   ];
 in deprecatedAlias // {
-  inherit esp-idf-full esp-idf-xtensa esp-idf-riscv;
+  inherit esp-idf-full esp-idf-xtensa esp-idf-riscv esp-rustc esp-rustc-src;
 
   # ESP8266
   gcc-xtensa-lx106-elf-bin = prev.callPackage ./pkgs/esp8266/gcc-xtensa-lx106-elf-bin.nix { };

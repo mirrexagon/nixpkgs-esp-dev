@@ -43,6 +43,8 @@
             gcc-xtensa-lx106-elf-bin
             # esp8266-rtos-sdk # Broken
             esp8266-nonos-sdk
+            esp-rustc
+            esp-rustc-src
             ;
         };
 
