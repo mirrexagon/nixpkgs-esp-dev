@@ -13,13 +13,13 @@ with pythonPackages;
 rec {
   idf-component-manager = buildPythonPackage rec {
     pname = "idf-component-manager";
-    version = "2.2.2";
+    version = "2.4.6";
     pyproject = true;
 
     src = fetchPypi {
       inherit version;
       pname = "idf_component_manager";
-      sha256 = "sha256-HKOJIThQ05khSBhDzVjX+cF2hWrBivNZXmQZWBpIGvc=";
+      sha256 = "sha256-d3BnP1Osw7w8jR1CPAfjvneJCPO/1kxarxJ1WbKRUc0=";
     };
 
     build-system = [
@@ -41,6 +41,7 @@ rec {
       pyparsing
 
       packaging
+      psutil
       pyyaml
       ruamel-yaml
       requests
@@ -61,13 +62,13 @@ rec {
 
   esp-coredump = buildPythonPackage rec {
     pname = "esp-coredump";
-    version = "1.13.1";
+    version = "1.15.0";
     pyproject = true;
 
     src = fetchPypi {
       inherit version;
       pname = "esp_coredump";
-      sha256 = "sha256-rz0HbQ4DHB7vClZICYW/Q13N+48MWqEpnup0TyYFzIk=";
+      sha256 = "sha256-X/pAVmB9rMbVFL3oDTato3KTGiiyA+n1suVwOm7qAs4=";
     };
 
     build-system = [
@@ -89,7 +90,7 @@ rec {
 
   esptool = buildPythonPackage rec {
     pname = "esptool";
-    version = "4.9.0";
+    version = "4.12.dev1";
     pyproject = true;
 
     build-system = [
@@ -98,7 +99,7 @@ rec {
 
     src = fetchPypi {
       inherit pname version;
-      sha256 = "sha256-9ja0VS84c835TPry1cN/VAfx8z33NkPv7lE4ZzELao4=";
+      sha256 = "sha256-aj9UJPjJ8Ff1oFqW2kwSsINpoKjSe+rw4z78/9oPTXQ=";
     };
 
     doCheck = false;
@@ -135,7 +136,7 @@ rec {
 
   esp-idf-kconfig = buildPythonPackage rec {
     pname = "esp-idf-kconfig";
-    version = "2.5.0";
+    version = "2.5.2";
     pyproject = true;
 
     build-system = [
@@ -145,7 +146,7 @@ rec {
     src = fetchPypi {
       inherit version;
       pname = "esp_idf_kconfig";
-      sha256 = "sha256-G65GbZh1tlOITRJG1bDKfHq247f0/1pzLjyAljHg45I=";
+      sha256 = "sha256-oTXrfQAVllJcf0KXRjctNEVi48MfVIFE+t7XfpWop68=";
     };
 
     doCheck = false;
@@ -166,13 +167,13 @@ rec {
 
   esp-idf-monitor = buildPythonPackage rec {
     pname = "esp-idf-monitor";
-    version = "1.7.0";
+    version = "1.9.0";
     pyproject = true;
 
     src = fetchPypi {
       inherit version;
       pname = "esp_idf_monitor";
-      sha256 = "sha256-lU5ec8f7d3R+PzBkfiCVbYbnD7ZO1rOJC3TA5ulKGdk=";
+      sha256 = "sha256-DDjaDD04PUtjBYY7jfjqbgkwOtWm1bqSznGzHxz3AM4=";
     };
 
     build-system = [
@@ -290,7 +291,7 @@ rec {
 
   esp-idf-panic-decoder = buildPythonPackage rec {
     pname = "esp-idf-panic-decoder";
-    version = "1.4.1";
+    version = "1.4.2";
     pyproject = true;
 
     build-system = [
@@ -300,7 +301,7 @@ rec {
     src = fetchPypi {
       inherit version;
       pname = "esp_idf_panic_decoder";
-      sha256 = "sha256-l0HQFZlWB0PkiK4EkiIotYBkX5hXHCu9v+f0noUcKwM=";
+      sha256 = "sha256-wjk2lUISeipxw7CDIORQTxKSC2QAW0cjYqM+wkBk9/U=";
     };
 
     doCheck = false;
