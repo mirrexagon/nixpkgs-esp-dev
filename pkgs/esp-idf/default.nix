@@ -1,8 +1,8 @@
 {
   owner ? "espressif",
   repo ? "esp-idf",
-  rev ? "v5.5.2",
-  sha256 ? "sha256-xYlj8uG/nxeMMNdAY8AbBiA7RYuEOOxoDyb+wVK8QWc=",
+  rev ? "v6.0",
+  sha256 ? "sha256-YhON/zUFOVTh8UEvujAXsd9IPaaNmSIP+dSZDE5fyqw=",
   toolsToInclude ? [
     "xtensa-esp-elf-gdb"
     "riscv32-esp-elf-gdb"
@@ -69,6 +69,7 @@ let
         # This list is from `tools/requirements/requirements.core.txt` in the
         # ESP-IDF checkout.
         setuptools
+        packaging
         click
         pyserial
         cryptography
@@ -77,17 +78,19 @@ let
         idf-component-manager
         esp-coredump
         esptool
-        esp-idf-diag
         esp-idf-kconfig
         esp-idf-monitor
         esp-idf-nvs-partition-gen
         esp-idf-panic-decoder
         esp-idf-size
+        esp-idf-diag
+        pyclang
+        construct
+        rich
+        psutil
+
         tree-sitter
         tree-sitter-grammars.tree-sitter-c
-        pyclang
-        psutil
-        rich
         argcomplete
 
         freertos_gdb
