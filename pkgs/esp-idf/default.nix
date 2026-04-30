@@ -1,8 +1,8 @@
 {
   owner ? "espressif",
   repo ? "esp-idf",
-  rev ? "v5.5.2",
-  sha256 ? "sha256-xYlj8uG/nxeMMNdAY8AbBiA7RYuEOOxoDyb+wVK8QWc=",
+  rev ? "v6.0.1",
+  sha256 ? "sha256-4KJa686qc+u7XkF/GS2o53l1SpwP2EmdqAn/qmlL1yU=",
   toolsToInclude ? [
     "xtensa-esp-elf-gdb"
     "riscv32-esp-elf-gdb"
@@ -69,6 +69,7 @@ let
         # This list is from `tools/requirements/requirements.core.txt` in the
         # ESP-IDF checkout.
         setuptools
+        packaging
         click
         pyserial
         cryptography
@@ -85,9 +86,15 @@ let
         esp-idf-size
         tree-sitter
         tree-sitter-grammars.tree-sitter-c
+        esp-idf-diag
         pyclang
         psutil
+        construct
         rich
+        psutil
+
+        tree-sitter
+        tree-sitter-grammars.tree-sitter-c
         argcomplete
 
         freertos_gdb
@@ -200,16 +207,6 @@ EOF
   buildExample = callPackage ./build-example.nix { inherit esp-idf; };
   targets = [
     "esp32"
-    "esp32c2"
-    "esp32c3"
-    "esp32s2"
-    "esp32s3"
-    "esp32c5"
-    "esp32c6"
-    "esp32h2"
-    "esp32p4"
-    "esp32c61"
-    "esp32h21"
   ];
   in
 esp-idf // {
