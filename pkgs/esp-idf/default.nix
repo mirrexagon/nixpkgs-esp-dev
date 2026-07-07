@@ -102,6 +102,8 @@ let
     pname = "esp-idf";
     version = rev;
 
+    preferLocalBuild = true;
+
     inherit src;
 
     # This is so that downstream derivations will have IDF_PATH set.

@@ -98,6 +98,9 @@ let
         inherit url sha256;
       };
 
+      # These are pre-built binary tarballs — no compilation happens, just download + autoPatchelf
+      preferLocalBuild = true;
+
       nativeBuildInputs = [ makeWrapper ] ++ lib.optionals stdenv.isLinux [ autoPatchelfHook ];
       buildInputs = lib.optionals stdenv.isLinux runtimeDeps;
 
