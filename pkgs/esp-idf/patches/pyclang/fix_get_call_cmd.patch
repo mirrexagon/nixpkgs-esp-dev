@@ -1,0 +1,24 @@
+From 5f86a45b37adb6a427bfd175a614a5b3893e4ffd Mon Sep 17 00:00:00 2001
+From: Jasper Chan <jasperchan515@gmail.com>
+Date: Thu, 16 Jul 2026 15:19:31 -0400
+Subject: [PATCH] bugfix: remove unnecessary _is_exe check from _get_call_cmd
+
+---
+ pyclang/runner.py | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/pyclang/runner.py b/pyclang/runner.py
+index f5ebfc4..1e7c835 100644
+--- a/pyclang/runner.py
++++ b/pyclang/runner.py
+@@ -52,7 +52,7 @@ def _get_call_cmd(filepath: str) -> t.List[str]:
+     if not fullpath:
+         raise FileNotFoundSystemExit(f'{filepath} not found in your PATH')
+
+-    return [fullpath] if _is_exe(fullpath) else [sys.executable, fullpath]
++    return [fullpath]
+
+
+ class Runner:
+--
+2.53.0

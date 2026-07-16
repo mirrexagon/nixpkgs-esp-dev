@@ -260,6 +260,10 @@ rec {
       sha256 = "sha256-CxFRwZhiGfQcuRpXcyQQlejSKD/qqPlHyYnGWE/E1Wo=";
     };
 
+    patches = [
+      ./patches/pyclang/fix_get_call_cmd.patch
+    ];
+
     doCheck = false;
 
     meta = {
