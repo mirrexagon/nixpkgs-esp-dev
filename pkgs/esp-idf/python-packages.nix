@@ -246,6 +246,36 @@ rec {
     };
   };
 
+  codereport = buildPythonPackage rec {
+    pname = "codereport";
+    version = "0.4.1";
+    pyproject = true;
+
+    build-system = [
+      poetry-core
+    ];
+
+    src = fetchPypi {
+      inherit pname version;
+      sha256 = "sha256-DCjcjEG73soFV3DO7u9bNat1DT9rsxMt5V+XMCv/qto=";
+    };
+
+    dependencies = [
+      jinja2
+      pygments
+      fs
+      python-slugify
+    ];
+
+    pythonRelaxDeps = [
+      "python-slugify"
+    ];
+
+    meta = {
+      homepage = "https://pypi.org/project/codereport/";
+    };
+  };
+
   pyclang = buildPythonPackage rec {
     pname = "pyclang";
     version = "0.6.3";
@@ -253,6 +283,10 @@ rec {
 
     build-system = [
       setuptools
+    ];
+
+    dependencies = [
+      codereport
     ];
 
     src = fetchPypi {
