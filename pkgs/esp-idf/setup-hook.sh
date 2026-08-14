@@ -7,6 +7,11 @@ addIdfEnvVars() {
         export IDF_TOOLS_PATH="$IDF_PATH/tools"
         export IDF_PYTHON_CHECK_CONSTRAINTS=no
         export IDF_PYTHON_ENV_PATH="$(readlink $IDF_PATH/python-env)"
+        # Same major.minor derivation as ESP-IDF's own tools/idf_tools.py, which
+        # matches '^v([0-9]+\.[0-9]+).*' against version.txt. Components such as
+        # esp_wifi_remote compare against that two-part form, so emitting the
+        # patch level here (5.5.2 instead of 5.5) would not help them.
+        export ESP_IDF_VERSION="$(sed -E 's/^v([0-9]+\.[0-9]+).*/\1/' "$1/version.txt")"
         addToSearchPath PATH "$IDF_TOOLS_PATH"
 
         # Extra paths from `export.sh` in the ESP-IDF repo.
