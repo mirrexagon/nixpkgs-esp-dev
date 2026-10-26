@@ -35,6 +35,7 @@
       buildInputs ? [ ],
       postInstall ? "",
       meta ? { },
+      patches ? { },
       ...
     }:
     {
@@ -43,8 +44,8 @@
       src = fetchFromGitHub {
         owner = "espressif";
         repo = "qemu";
-        rev = "esp-develop-9.2.2-20250817";
-        hash = "sha256-482BeOmWkaOn2H3inH7sZADsxV331Nssbs+6iYCTFCg=";
+        rev = "esp-develop-9.2.2-20260417";
+        hash = "sha256-bFxVhMg4ogyUEqtzNDm7mK4QK0w1cIzHteGzKebubwg=";
         nativeBuildInputs = [
           cacert
           git
@@ -65,6 +66,12 @@
         "--enable-gcrypt"
         "--enable-slirp"
       ];
+
+      # This patch in currently locked nixpkgs is for a newer version of qemu
+      # than the base of this fork, so filter it out.
+      patches = builtins.filter (
+        x: builtins.baseNameOf x != "fix-tls-tests-without-tasn1.patch"
+      ) patches;
 
       buildInputs = buildInputs ++ [
         libgcrypt

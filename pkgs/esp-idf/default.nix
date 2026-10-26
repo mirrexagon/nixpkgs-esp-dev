@@ -1,8 +1,8 @@
 {
   owner ? "espressif",
   repo ? "esp-idf",
-  rev ? "v5.5.2",
-  sha256 ? "sha256-xYlj8uG/nxeMMNdAY8AbBiA7RYuEOOxoDyb+wVK8QWc=",
+  rev ? "v6.1",
+  sha256 ? "sha256-6+mPhof81Yrre8CFar33ufzmPHedSnVfTG5G9A6MbYM=",
   toolsToInclude ? [
     "xtensa-esp-elf-gdb"
     "riscv32-esp-elf-gdb"
@@ -69,7 +69,9 @@ let
         # This list is from `tools/requirements/requirements.core.txt` in the
         # ESP-IDF checkout.
         setuptools
+        packaging
         click
+        rich-click
         pyserial
         cryptography
         pyparsing
@@ -77,20 +79,27 @@ let
         idf-component-manager
         esp-coredump
         esptool
-        esp-idf-diag
         esp-idf-kconfig
         esp-idf-monitor
         esp-idf-nvs-partition-gen
-        esp-idf-panic-decoder
         esp-idf-size
+        esp-idf-diag
+        esp-idf-panic-decoder
+        esp-idf-sbom
+        pyclang
+        construct
+        rich
+        psutil
+        websockets # required to satisfy runtime check of 'esp-pylib[ide]'
+
+        # ble's compressed log testing tool
         tree-sitter
         tree-sitter-grammars.tree-sitter-c
-        pyclang
-        psutil
-        rich
         argcomplete
 
+        # gdb extensions dependencies
         freertos_gdb
+        idf-drivers-gdb
 
         # The esp idf vscode extension seems to want pip, too
         pip
@@ -200,16 +209,6 @@ EOF
   buildExample = callPackage ./build-example.nix { inherit esp-idf; };
   targets = [
     "esp32"
-    "esp32c2"
-    "esp32c3"
-    "esp32s2"
-    "esp32s3"
-    "esp32c5"
-    "esp32c6"
-    "esp32h2"
-    "esp32p4"
-    "esp32c61"
-    "esp32h21"
   ];
   in
 esp-idf // {
