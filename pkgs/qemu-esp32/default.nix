@@ -4,6 +4,7 @@
   cacert,
   git,
   meson,
+  lib,
   libgcrypt,
 }:
 
@@ -33,6 +34,7 @@
     {
       configureFlags ? [ ],
       buildInputs ? [ ],
+      patches ? [ ],
       postInstall ? "",
       meta ? { },
       ...
@@ -43,8 +45,8 @@
       src = fetchFromGitHub {
         owner = "espressif";
         repo = "qemu";
-        rev = "esp-develop-9.2.2-20250817";
-        hash = "sha256-482BeOmWkaOn2H3inH7sZADsxV331Nssbs+6iYCTFCg=";
+        rev = "esp-develop-9.2.2-20261109";
+        hash = "sha256-pulaP1v7xAuTeEVREhyk7CS6YK2nrN8Kv0UQUcBDzr0=";
         nativeBuildInputs = [
           cacert
           git
@@ -65,6 +67,11 @@
         "--enable-gcrypt"
         "--enable-slirp"
       ];
+
+      # tests/qtest/migration/tls-tests.c does not exist in the Espressif fork
+      patches = builtins.filter (
+        p: !(lib.hasSuffix "fix-tls-tests-without-tasn1.patch" (baseNameOf (toString p)))
+      ) patches;
 
       buildInputs = buildInputs ++ [
         libgcrypt
