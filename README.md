@@ -23,13 +23,6 @@ The list of available shells (to go after the `#` in the command) are:
 
 - `esp-idf-full`: Includes toolchains for _all_ supported ESP32 chips (no ESP8266).
 - `esp32-idf`: Includes toolchain for the ESP32.
-- `esp32c2-idf`: Includes toolchain for the ESP32-C2.
-- `esp32c3-idf`: Includes toolchain for the ESP32-C3.
-- `esp32s2-idf`: Includes toolchain for the ESP32-S2.
-- `esp32s3-idf`: Includes toolchain for the ESP32-S3.
-- `esp32c6-idf`: Includes toolchain for the ESP32-C6.
-- `esp32h2-idf`: Includes toolchain for the ESP32-H2.
-- `esp32p4-idf`: Includes toolchain for the ESP32-P4.
 - `esp8266-rtos-sdk`: Includes RTOS SDK toolchain for ESP8266 and esptool.
 - `esp8266-nonos-sdk`: Includes NONOS SDK toolchain for ESP8266 and esptool.
 
@@ -38,13 +31,6 @@ If you're not using Nix 2.4+ or prefer not to need to enable flakes, you can clo
 
 - `nix-shell shells/esp32-idf-full.nix`
 - `nix-shell shells/esp32-idf.nix`
-- `nix-shell shells/esp32c2-idf.nix`
-- `nix-shell shells/esp32c3-idf.nix`
-- `nix-shell shells/esp32s2-idf.nix`
-- `nix-shell shells/esp32s3-idf.nix`
-- `nix-shell shells/esp32c6-idf.nix`
-- `nix-shell shells/esp32h2-idf.nix`
-- `nix-shell shells/esp32p4-idf.nix`
 - `nix-shell shells/esp8266-rtos-sdk.nix`
 - `nix-shell shells/esp8266-nonos-sdk.nix`
 

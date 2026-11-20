@@ -10,14 +10,10 @@
   },
 }:
 
-builtins.warn
-  "[DEPRECATION WARNING] Chip specific shell will be removed starting ESP-IDF 6.0. Use esp-idf-full instead."
+pkgs.mkShell {
+  name = "esp-idf-xtensa-shell";
 
-  pkgs.mkShell
-  {
-    name = "esp-idf-esp32p4-shell";
-
-    buildInputs = with pkgs; [
-      esp-idf-esp32p4
-    ];
-  }
+  buildInputs = with pkgs; [
+    esp-idf-xtensa
+  ];
+}
